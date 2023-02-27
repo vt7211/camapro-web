@@ -1,0 +1,21 @@
+.content table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px !important;
+}
+.content table > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #ddd;
+}
+.content table td, table th{
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+.content table tr:nth-of-type(2n+1) {
+    background-color: #f9f9f9;
+}
+.content{
+    overflow-x: auto;
+}

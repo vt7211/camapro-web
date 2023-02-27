@@ -1,0 +1,38 @@
+*** fix loi memory limit ***
+COMPOSER_MEMORY_LIMIT=-1  composer require maatwebsite/excel --ignore-platform-reqs
+COMPOSER_MEMORY_LIMIT=-1  composer require intervention/image --ignore-platform-reqs
+COMPOSER_MEMORY_LIMIT=-1  composer require berkayk/onesignal-laravel --ignore-platform-reqs
+COMPOSER_MEMORY_LIMIT=-1  composer require predis/predis --ignore-platform-reqs
+
+*** fix loi warning nhanh ***
+thêm phía sau câu lệnh --ignore-platform-reqs
+
+
+composer create-project --prefer-dist laravel/laravel control.netsa.vn
+php artisan make:migration create_users_table // tạo migration
+php artisan make:model Article -m // tao modal va migration
+php artisan migrate // chạy migration
+php artisan controller:make ten_controller
+https://github.com/barryvdh/laravel-elfinder // elfinder
+
+
+https://www.codeinhouse.com/create-drag-and-drop-menu-laravel-using-jquery-sortable/ tao menu
+
+https://demo.mekshq.com/trawell/
+http://html.wyzi.net/wyzi/index.html
+http://preview.byaviators.com/template/realocation/
+http://themestarz.net/html/locations/index-map-version-1.html
+http://zoner.inwavethemes.com/
+
+
+
+{"news.create":true,"news.publish":true,"news.list":true,"news.draft":true,"cate.list":true,"cate.create":true,"cate.update":true,"cate.delete":true,"comment.list":true,"comment.create":true,"comment.update":true,"comment.delete":true,"menu.list":true,"menu.create":true,"menu.update":true,"menu.delete":true,"setting.list":true,"setting.update":true,"user.list":true,"user.create":true,"user.update":true,"user.delete":true}
+
+
+phan quyen
+tao policy cho model news
+php artisan make:policy NewsPolicy --model=news
+
+lỗi SQLSTATE[42000]: Syntax error or access violation
+vô sửa file config/database.php
+'strict' => true, => 'strict' => false,
