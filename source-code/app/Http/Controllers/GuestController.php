@@ -12,16 +12,35 @@ class GuestController extends Controller
 {
     public function home(Request $Request) {
         $data = $this->getsetting();
-        $visit = new visit;
-        // $visit->ip = Request::ip();
-        $visit->ip = get_client_ip();
-        $visit->link = curPageURL();
-        $visit->user_agent = Request::server('HTTP_USER_AGENT');
-        $visit->referer = Request::server('HTTP_REFERER');
-        // dd($visit);
-        $visit->note = "";
-        $visit->save();
+        $ip = get_client_ip();
+        if($ip){
+            $visit = new visit;
+            // $visit->ip = Request::ip();
+            $visit->ip = get_client_ip();
+            $visit->link = curPageURL();
+            $visit->user_agent = Request::server('HTTP_USER_AGENT');
+            $visit->referer = Request::server('HTTP_REFERER');
+            // dd($visit);
+            $visit->note = "";
+            $visit->save();
+        }
         return view('guest.home',compact("data"));
+    }
+    public function single($slug){
+        $data = $this->getsetting();
+        $ip = get_client_ip();
+        if($ip){
+            $visit = new visit;
+            // $visit->ip = Request::ip();
+            $visit->ip = get_client_ip();
+            $visit->link = curPageURL();
+            $visit->user_agent = Request::server('HTTP_USER_AGENT');
+            $visit->referer = Request::server('HTTP_REFERER');
+            // dd($visit);
+            $visit->note = "Chi tiết: $slug";
+            $visit->save();
+        }
+        return view('guest.home',compact("data","slug"));
     }
     public function getsetting(){
         $data = settings::select('name','value')->get()->toArray();

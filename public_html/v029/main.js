@@ -24,7 +24,6 @@ var nav_def = {
     canRefesh: false,
 };
 var token = null;
-var user = null;
 var settings = null;
 var varibles = {
     padding_bottom: 70,
@@ -62,6 +61,7 @@ var current_tabChild = {
     }
 };
 var current_action = '';
+var current_length = '';
 var last_res = null; // last response query get data
 var vargoobal = {
     home: {
@@ -126,6 +126,11 @@ var vargoobal = {
     },
 }
 // name + action 
+var idDevice = null;
+var user = null;
+var os = 'web';
+var domainchat = document.head.querySelector('meta[name="domainchat"]').content;
+
 
 $(document).ready(function(){
     $('[data-toggle="popover"]').popover();
@@ -141,6 +146,7 @@ $(document).ready(function(){
     if(user){
         user = JSON.parse(user);
     }
+
     $('#stars li').on('mouseover', function(){
         var onStar = parseInt($(this).data('value'), 10); // The star currently mouse on
        
@@ -184,11 +190,7 @@ $(document).ready(function(){
         $('.stardgcode').val(ratingValue);
         // responseMessage(msg);
     });
-    getData('home',{saveRes: 1, page: 1});
-    // $('body').on('click', '.refreshbtn', function(){
-    //     getData(vargoobal[current_tab]);
-    // });
-    
+    getData('home',{saveRes: 1, page: 1, os});
     var heightif = 0;
     window.addEventListener('message', function (e) {
         // console.log('addEventListener message',e.data);
@@ -266,10 +268,12 @@ $(document).ready(function(){
             if(current_tab == 'account' && !user) {
                 
             } else {
-                let his = vargoobal[current_tab].history;
+                let histemp = [];
+                histemp[0] = vargoobal[current_tab].history[0];
+                vargoobal[current_tab].history = histemp;
                 $('.tabcontent[data-tab="'+current_tab+'"] .tabchild').removeClass('active');
                 $('.tabcontent[data-tab="'+current_tab+'"] .tabchild.main').addClass('active');
-                setNav(his[0].nav);
+                setNav(histemp[0].nav);
             }
         }
 
@@ -287,10 +291,11 @@ $(document).ready(function(){
     // action
     $('body').on('click','.action',function(e){
         let confirm = $(this).data('confirm');
+        let msgconfirm = $(this).data('msgconfirm') ? $(this).data('msgconfirm') : 'Bạn có chắc chắn muốn thực hiện thao tác này không ?';
         let $this = $(this);
         if(confirm) {
             swal({
-                text: 'Bạn có chắc chắn muốn lấy mã khuyến mãi không ?',
+                text: msgconfirm,
                 buttons: ['Không', 'Có']
             }).then((willDelete) => {
                 if (willDelete) {
@@ -304,11 +309,11 @@ $(document).ready(function(){
         return false;
     });
     $(window).scroll(function(){
-        var top = $(this).scrollTop() + window.innerHeight - 55;
+        var top = $(this).scrollTop() + window.innerHeight + 50;
         let namechild = current_tabChild[current_tab].child;
         let hdiv = $('.loadmore').offset().top;
+        // console.log(top, hdiv);
         if (!loading.value && !current_tabChild[current_tab][namechild + '_maxpage'] && current_tabChild[current_tab][namechild + '_loadmore']) {
-            // console.log(top, hdiv);
             if (top >= hdiv) {
                 let name = 'morehome';
                 let body = {}
@@ -320,6 +325,7 @@ $(document).ready(function(){
                         id: getIds(),
                         tencoso: '',
                         diachi_id: 0,
+                        os,
                         page: current_tabChild[current_tab][namechild + '_page'] + 1,
                         loadmore: true
                     };
@@ -333,14 +339,16 @@ $(document).ready(function(){
                     body = {
                         id: getIds(),
                         page: current_tabChild[current_tab][namechild + '_page'] + 1,
-                        loadmore: true
+                        loadmore: true,
+                        os,
                     };
                 } else if (current_tab == 'spin'){
                     name = 'getvongquay';
                     body = {
                         id: getIds(),
                         page: current_tabChild[current_tab][namechild + '_page'] + 1,
-                        loadmore: true
+                        loadmore: true,
+                        os,
                     };
                 } 
                 getData(name, body, {}).then((res) => {
@@ -374,17 +382,46 @@ $(document).ready(function(){
             showMonthAfterYear: false,
             yearSuffix: ""
         };
-
         $.datepicker.setDefaults($.datepicker.regional["vi-VN"]);
     });
+
+    var year60 = new Date();
+    year60.setFullYear(year60.getFullYear() - 60);
+    
+    var year15 = new Date();
+    year15.setFullYear(year15.getFullYear() - 15);
+    
+    console.log(year15, year60);
 
     $('.date').datepicker($.extend({}, $.datepicker.regional['vn'], {
         dateFormat: "dd/mm/yy",
         changeMonth: true,
-        changeYear: true
+        changeYear: true,
+        yearRange: `${year60.getFullYear()}:${year15.getFullYear()}`
     }));
-});
 
+    $('textarea, input').on('focus',function(){
+        if(os != 'web') xfocus();
+    });
+    $('textarea, input').on('blur',function(){
+        if(os != 'web') xblur();
+    });
+        
+    let chat = gup('chat');
+    if(chat) {
+        console.log('chat1');
+        setTimeout(() => {
+            doAction(null, {
+                nameaction: 'chat_coso',
+                id: 5,
+                title: 'chat test',
+                phone: "0909979367",
+                codelogin: "28B02T"
+            })
+        }, 1000);
+    }
+
+});
 function isEmail(email) {
     var re =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -422,7 +459,21 @@ function convertnumber(str) {
     return String(str).replace(/(.)(?=(\d{3})+$)/g, '$1,');
 }
 
-// func
+// function
+function changeStateUrl(data){
+    data = {
+        type: 'chi-tiet-co-so',
+        title: 'Campapro - Lấy Mã Khuyến Mãi',
+        slug: null,
+        ...data,
+    }
+    console.log('changeStateUrl',data.slug);
+    let domain = window.location.hostname;
+    let slug = data.slug ? data.slug : '';
+    $('title').text(data.title == "Massage" ? "Campapro - Lấy Mã Khuyến Mãi" : data.title);
+    window.history.pushState(data.type, data.title, `https://${domain}/${slug}`);
+    // if(data.slug){}
+}
 function setNav(navtemp = null){
     let his = vargoobal[current_tab].history ? vargoobal[current_tab].history : [];
     let temp = vargoobal[current_tab];
@@ -448,7 +499,7 @@ function setNav(navtemp = null){
     if(current_action == 'back' && '#' + child == his[0].div) {
         navtemp = his.length >= 1 ? his[0].nav : {};
     } else if(current_action == 'back') {
-        navtemp = his.length > 1 && his[his.length - 2] ? his[his.length - 2].nav : {};
+        navtemp = his.length > 1 && his[his.length - 1] ? his[his.length - 1].nav : {};
     }
     // console.log('navtemp',navtemp);
     vargoobal[current_tab] = {
@@ -477,10 +528,15 @@ function setNav(navtemp = null){
 
     if(navtemp && navtemp.canBack) $('.backbtn').removeClass('hidden'); else $('.backbtn').addClass('hidden');
     if(navtemp && navtemp.canRefesh) $('.refreshbtn').removeClass('hidden'); else $('.refreshbtn').addClass('hidden');
-    if(navtemp && navtemp.canSearch) $('.searchbtn').removeClass('hidden'); else $('.searchbtn').addClass('hidden');
+    if(navtemp && !navtemp.fulliframe) $('body').removeClass('fulliframe'); else $('body').addClass('fulliframe');
+    if(navtemp && navtemp.canSearch) {
+        let nameaction = "searchcoso";
+        if(current_action == 'lichsupoint') nameaction = 'searchlspoint';
+        $('.searchbtn').attr('data-nameaction', nameaction).removeClass('hidden'); 
+        // console.log('current_action', current_action);
+    } else $('.searchbtn').addClass('hidden');
     if(navtemp && navtemp.title) $('h1').text(navtemp.title);
     if(check) {
-        // console.log(his, divold, div);
         his[his.length] = {
             nav: {
                 canBack: $('.backbtn').hasClass('hidden') ? false : true,
@@ -492,6 +548,10 @@ function setNav(navtemp = null){
         }
         vargoobal[current_tab].history = his;
     }
+    
+    let url = location.pathname.split('/').slice(1);
+    temp.slug = url && url[0] ? url[0] : null;
+    temp.title = document.title;
     return temp;
 }
 function change_screen(item = null) {
@@ -499,8 +559,8 @@ function change_screen(item = null) {
     if ( item || $(item).length ) {
         // console.log('change_screen', current_tab,item);
         let div = $('.tabcontent[data-tab="' + current_tab + '"]');
-        $('h1').text();
         div.find('.tabchild').removeClass('active');
+        // $('h1').text();
         div.find(item).addClass('active');
         current_tabChild[current_tab].child = div.find('.tabchild.active').attr('id');
     } else {
@@ -595,6 +655,7 @@ async function doAction(item = null, respon = null){
             return false;
         }
         par.id = id;
+        par.os = os;
         run = true;
     }
     else if(nameaction == 'login') {
@@ -609,7 +670,8 @@ async function doAction(item = null, respon = null){
         }
         par.phone = phone;
         par.password = password;
-        par.nofid = null;
+        par.nofid = idDevice;
+        par.os = os;
         run = true;
     }
     else if(nameaction == 'logout') {
@@ -620,6 +682,7 @@ async function doAction(item = null, respon = null){
             buttons: ["Bỏ Qua","Đăng Xuất"],
             dangerMode: true,
         }).then((willDelete) => {
+            par.nofid = idDevice;
             if (willDelete) {
                 run = true;
             }
@@ -761,29 +824,97 @@ async function doAction(item = null, respon = null){
             run = true;
         }
     }
-    
     else if(nameaction == 'detailcoso') {
+        let slug = item ? item.data('slug') : respon.slug;
         par.id = id;
         run = true;
     }
-    else if(nameaction == 'single') {
+    else if(nameaction == 'detaildeal') {
+        let slug = item ? item.data('slug') : respon.slug;
+        par.id = id;
+        run = true;
+    }
+    else if(nameaction == 'slug') {
+        let slug = item ? item.data('slug') : respon.slug;
+        par.slug = slug;
+        run = true;
+    }
+    else if(nameaction == 'getGiovang') {
+        run = true;
+    }
+    else if(nameaction == 'chat_coso') {
+        // par.id = id;
         if(id){
+            if(!token) {
+                alert('Bạn phải đăng nhập để nói chuyện với tiệm nhé');
+                $('.tabfooter[data-tab="account"]').click();
+            }else{
+                loading.value = true;
+                let title = item ? item.data('title') : respon.title;
+                let codelogin = !respon ? user.codelogin : respon.codelogin;
+                let phone = !respon ? user.phone : respon.phone;
+                // let divid = item.data('divid');
+                let divid = current_tab == 'home' ? 'chatcoso' : 'chatcoso2';
+
+                current_tabChild[current_tab].child = "#" + id;
+                let src = `${domainchat}/chat/room/${id}?webapp=1&code=${codelogin}&phone=${phone}`;
+                let iframe = `<iframe id="iframe_chatcoso" src="${src}" style="height: calc( 100% - 0px ); width: 100%;" frameborder="0"></iframe>`;
+                $('#'+divid).empty().html(iframe);
+                let iframe_chatcoso = 'iframe_chatcoso';
+                // let src = `${domainchat}/chat/room/${id}?code=${user.codelogin}&phone=${user.phone}`;
+                // alert(src);
+                // window.open(src, '_blank').focus();
+                
+                console.log('src', src);
+                // let src = 'https://laravel8.local/chat/room/'+id+'?webapp=1&'+uniqId();
+                // console.log('iframe_chatcoso', iframe_chatcoso, token);
+                // $('#'+iframe_chatcoso).attr('src',src);
+                // document.getElementById(iframe_chatcoso).src = document.getElementById('iframe_chatcoso').src;
+                
+                setTimeout(() => {
+                    var iframe = document.getElementById(iframe_chatcoso).contentWindow;
+                    var message = {
+                        type: "webapp",
+                        value: {
+                            token,
+                            user,
+                        }
+                    };
+                    iframe.postMessage(JSON.stringify(message), '*');
+                    change_screen("#" + divid);
+                    setNav({canBack: true, canSearch: false, canRefesh: false, fulliframe: true,title});
+                    loading.value = false;
+                }, 300);
+                $('body').scrollTop(0);
+                // loading.value = false;
+            }
+        }
+    }
+    else if(nameaction == 'single') {
+        let iditem = item.data('iditem');
+        let slug = item.data('slug');
+        if(id){
+            if(iditem) run = true; // get bai viet = id
+            par.id = iditem;
             let title = item.data('title');
             current_tabChild[current_tab].child = "#" + id;
             change_screen("#" + id);
             setNav({canBack: true, canSearch: false, canRefesh: false,title});
+            changeStateUrl({title, slug});
             // console.log('single', title, vargoobal);
         }
     }
     else if(nameaction == 'single_news') {
         if(id){
             let title = item.data('title');
+            let slug = item.data('slug');
             let codehtml = item.data('html');
             current_tabChild[current_tab].child = "#" + id;
             $('#'+id).empty().html(codehtml);
             $('#'+id+' link').remove();
             change_screen("#" + id);
             setNav({canBack: true, canSearch: false, canRefesh: false,title});
+            changeStateUrl({title, slug});
             // console.log('single_news', title, vargoobal);
         }
     }
@@ -874,11 +1005,13 @@ async function doAction(item = null, respon = null){
             // console.log(11);
             par.lat = varibles.lat;
             par.long = varibles.lng;
+            par.os = os;
             run = true;
         }
     }
     else if(nameaction == 'getcode') {
         let getcode = item.data('getcode');
+        let type = item.data('type') ? item.data('type') : 'code';
         if(!getcode) {
             show_alert('Cơ sở này không thể lấy mã');
             return false;
@@ -886,31 +1019,87 @@ async function doAction(item = null, respon = null){
             show_alert('Bạn phải đăng nhập để thực hiện thao tác này');
             $('.tabfooter[data-tab="account"]').click();
         } else {
-            par.coso_id = id;
-            par.nguon = 2;
+            if(type == 'deal') par.deal_id = id;
+            else par.coso_id = id;
+            par.type = type;
+            par.nguon = os;
             run = true;
         }
-    }   
+    }
+    else if(nameaction == 'lichsupoint') {
+        // if(!$('#listlspoint').hasClass('active')) {
+        //     let title = item.data('title');
+        //     current_tabChild[current_tab].child = "#" + id;
+        //     change_screen("#" + id);
+        //     setNav({canBack: true, canSearch: true, canRefesh: false,title});
+        // }
+        par.page = 1;
+        par.ngaybatdau = $('#ngaybatdaulsp').val();
+        par.ngayketthuc = $('#ngayketthuclsp').val();
+        par.tensearch = $('#tenlspointsearch').val();
+        if(current_tabChild[current_tab].listlspoint_loaded) $('#listlspoint').empty();
+        run = true;
+    }
+    else if(nameaction == 'searchlspoint') {
+        $('#searchlspoint').addClass('active');
+    }
+    else if(nameaction == 'act_lichsupoint') {
+        nameaction = 'lichsupoint';
+        par.page = 1;
+        vargoobal.account.ngaybatdaulspoint = $('#ngaybatdaulsp').val();
+        vargoobal.account.ngayketthuclspoint = $('#ngayketthuclsp').val();
+        vargoobal.account.tenlspointsearch = $('#tenlspointsearch').val();
+        par.ngaybatdau = vargoobal.account.ngaybatdaulspoint;
+        par.ngayketthuc = vargoobal.account.ngayketthuclspoint;
+        par.tensearch = vargoobal.account.tenlspointsearch;
+        run = true;
+    }
+    else if(nameaction == 'buyvip') {
+        if(user.money >= 50){
+            par.months = item.data('month');
+            run = true;
+        }else{
+            let SKU_POINT = settings.SKU_POINT;
+            let moneyvip = settings.moneyvip;
+            let tygia = settings.tygia;
+            let money1thang = parseInt(moneyvip[0]) / tygia;
+            show_alert(`Bạn không đủ ${money1thang}${SKU_POINT} tối thiểu để nâng cấp Vip`);
+        }
+    }
+    else if(nameaction == 'save_device') {
+        if(respon.device){
+            idDevice = respon.device;
+            par.device = respon.device;
+        }
+        os = "web_" + getMobileOS();
+        if(respon.token){
+            par.token = respon.token;
+        }
+        if(respon.hasNotch) $('body').addClass("hasNotch");
+        run = true;
+        // console.log(par);
+        // alert(os);
+        // alert('save_device action: ' +par.device);
+    }
     else if(nameaction == 'back') {
         let his = vargoobal[current_tab].history;
         if(his && his[0] && his[1]){
-            let child = current_tabChild[current_tab].child;
-            let index = 0;
-            let check3cap = false;
-            if ( current_tab == 'account' && child == 'listfavourite' ) check3cap = true;
-            else if ( current_tab == 'home' && child == 'searchcoso' ) check3cap = true;
-            if(!check3cap) {
-                index = his.length - 2;
-            }
+            his = removeLastArr(his);
+            let index = his.length ? his.length - 1 : 0 ;
+            vargoobal[current_tab].history = his;
             let div = his[index].div;
+            let item = his[index].nav;
             change_screen(div);
-            setNav(his[index].nav);
+            setNav(item);
+            changeStateUrl({title: item.title, slug: item.slug});
+            console.log('item',item);
+
             // getSelectorCurDiv().empty();
             $('.tabchild.modal.active').removeClass('active');
-            console.log(div, his[index]);
         } else {
             show_alert('Lỗi chức năng, bạn hãy tải lại ứng dụng nhé');
         }
+        return false;
     }
     else if(nameaction == 'refresh') {
         par.page = 1;
@@ -951,7 +1140,14 @@ async function doAction(item = null, respon = null){
         run = true;
     }
     else if(nameaction == 'nguoigioithieu') {
+        // alert('login action ', getCookie('idDevice'));
         show_alert (user.nguoigioithieu ? `Người giới thiệu của bạn là: ${user.nguoigioithieu}` : 'Bạn không có người giới thiệu');
+    }
+    else if(nameaction == 'view_danhgiacode') {
+        let getcode = item.data('getcode');
+        let type = item.data('type') ? item.data('type') : 'code';
+        $('.tabfooter[data-tab="account"]').click();
+        $('.action[data-nameaction="listcode"]').click();
     }
     else if(nameaction == 'modal') {
         $('#' + id).addClass('active');
@@ -977,7 +1173,6 @@ function loadscript(name = 'home'){
     // console.log('loadscript', name, current_action, last_res);
     let namechild = current_tabChild[current_tab].child;
     let html = '';
-    
     if (current_action == 'act_searchcoso') {
         if(last_res && isObject(last_res) && last_res.data && last_res.data.cosos){
             last_res.data.cosos.map((item, index) => {
@@ -1021,12 +1216,32 @@ function loadscript(name = 'home'){
             localStorage.setItem('token', token);
         }
         if(settings.slider){
+            let motinslider = settings.motinslider;
             html += '<div class="slider owl-theme owl-carousel">';
             settings.slider.map((item, index) => {
-                html += `<img src="${item}" >`;
+                let link = '';
+                // console.log(index, motinslider[index]);
+                if(motinslider[index]) link += `<a data-nameaction="single" data-iditem="${motinslider[index]}" data-id="singlenews_home" data-title="Đang tải tin..." class="action" href="#">`;
+                let img = `${link}<img src="${item}" >`;
+                if(motinslider[index]) img += `</a>`;
+                html += img;
             });
-            html += '</div>';
+            html += '</div><div class="" style="background: #f5f5f5; height: 10px;"></div>';
         }
+        
+        if(last_res && isObject(last_res) && last_res.giovangs.length){
+            html += '<div class="col-md-12"><a class="btn btn-primary btn-block action mb-10px" data-nameaction="getGiovang">Giờ Vàng Hôm Nay</a></div>';
+        }
+        if(last_res && isObject(last_res) && last_res.deals.length){
+            html += '<div class="wpdeals"><div class="wptitle-img col-md-12"><h3 class="hot">Hot Deal </h3><img src="/images/icon-deal-2.png" alt="deal"> <div class="clearfix"></div></div>';
+            html += '<div class="owldeals owl-carousel owl-carousel">';
+            
+            last_res.deals.map((item, index) => {
+                html += getHtml(item,'deal');
+            });
+            html += '</div></div>';
+        }
+        html += '<div class="wplistcoso">';
         if(last_res && isObject(last_res) && last_res.data.cosohot){
             html += '<h3 class="title-home col-md-12">Cơ Sở Hot</h3>';
             last_res.data.cosohot.map((item, index) => {
@@ -1041,6 +1256,7 @@ function loadscript(name = 'home'){
                 saveId(item.id);
             });
         }
+        html += '<div class="clearfix"></div></div>';
         current_tabChild[current_tab][namechild + '_page'] = 1;
         // console.log(last_res);
         getSelectorCurDiv().append(html);
@@ -1060,7 +1276,7 @@ function loadscript(name = 'home'){
 
         $('.slider').owlCarousel({
             loop:true,
-            dots: false,
+            dots: true,
             nav: false,
             margin:15,
             navText: ['', ''],
@@ -1072,10 +1288,67 @@ function loadscript(name = 'home'){
                 }
             }
         });
+        if($('.owldeals').length){
+            $('.owldeals').owlCarousel({
+                loop:false,
+                dots: true,
+                nav: false,
+                margin:10,
+                navText: ['', ''],
+                autoplay:false,
+                stagePadding: 70,
+                // center:true,
+                responsive:{
+                    100:{
+                        items:2,
+                        stagePadding: 0,
+                    },
+                    414:{
+                        items:2,
+                        stagePadding: 40,
+                    },
+                    480:{
+                        items:3,
+                        stagePadding: 70,
+                    },
+                }
+            });
+            $('.deal').each(function(){
+                let date = $(this).find('.countdown').data('ketthuc_at');
+                if(date){
+                    $(this).find('.countdown').countdown(`${date}`, function(event) {
+                        $(this).html(event.strftime('<div class="item"><span>%Hh</span></div> <div class="item"><span>%Mm</span></div> <div class="item"><span>%Ss</span></div>'));
+                        // $(this).html(event.strftime('<div class="item"><span>%d</span><p>Ngày<p></div> <div class="item"><span>%H</span><p>Giờ<p></div> <div class="item"><span>%M</span><p>Phút<p></div> <div class="item"><span>%S</span><p>Giây<p></div>'));
+                    }).on('finish.countdown', function(event) {
+                        console.log('đã xong countdown');
+                        $(this).parents('.deal').addClass('hethan');
+                    }).on('stop.countdown', function(event) {
+                        console.log('stop countdown');
+                        $(this).parents('.deal').addClass('hethan');
+                    });
+                }
+            });
+            let wpar = $('.wp-price:first').width();
+            $(".animated-progress span").each(function () {
+                $(this).css({width: $(this).attr("data-progress")});
+            });
+        }
         $("input.rating").rating({
             filled: 'fa fa-star',
             empty: 'fa fa-star-o xam'
         });
+        if(last_res.data.danhgiacode){
+            $('#candanhagia').addClass('active');
+        }
+        
+        let url = location.pathname.split('/').slice(1);
+        let slug = url && url[0] ? url[0] : null;
+        if(slug){
+            doAction(null, {
+                nameaction: 'slug',
+                slug,
+            });
+        }
         // getData('getsetting',{json: 1, saveRes: 1});
     } else if(name == 'morehome') {
         current_tabChild[current_tab][namechild + '_page'] += 1;
@@ -1231,14 +1504,19 @@ function loadscript(name = 'home'){
             let banggiave = current_tab == 'home' ? 'banggiave' : 'banggiave2';
             change_screen('#' + divcoso);
             let item = last_res.data;
-            setNav({canBack: true, canSearch: false, canRefesh: false,title: last_res.data.name});
+            let data = {
+                title: last_res.data.name,
+                slug: last_res.data.alias
+            }
+            changeStateUrl(data);
+            setNav({canBack: true, canSearch: false, canRefesh: false,title: last_res.data.name, slug: last_res.data.sku});
             
             html += '<div class="slidersing owl-theme owl-carousel">';
             last_res.images.map((item2, index) => {
                 html += `<div class="imgsing" style="background-image: url(${item2.linkimg})" ></div>`;
             });
             html += '</div>';
-            html += '<div class="col-md-12 infosing">';
+            html += '<div class="infosing"><div class="col-md-12">';
             html += `<h2 class="namesing">${item.name}</h2>`;
             html += `<div class="mb-10px">
                 <span class="star mr-15px"><input type="hidden" data-filled="fa fa-star" data-empty="fa fa-star-o" class="rating" disabled="disabled" value="${item.star}"/></span>
@@ -1253,7 +1531,7 @@ function loadscript(name = 'home'){
                 </span>`;
 
             if(item.banggia) html += `<a href="#" class="btn btn-primary btn-xs action" data-nameaction="modal" data-id="${banggiave}">Xem Bảng Giá <i class="fa fa-long-arrow-right"></i></a>`;
-            html += '</div></div>';
+            html += '</div></div><div class="clearfix"></div></div>';
 
             html += `<div class="beakline"></div>
                 <div class="listitem"><a target="_blank" href="https://www.google.com/maps/search/?api=1&query=${item.tdlat},${item.tdlong}"><i class="fa fa-map-marker ico"></i> ${item.diachi}</a> </div>
@@ -1284,7 +1562,9 @@ function loadscript(name = 'home'){
             });
             let idbanggia = current_tab == 'home' ? '#ndbanggia' : '#ndbanggia2';
             $(idbanggia).html(banggiahtml);
-            
+            if(os == 'web' && last_res.data.hoptac ) {
+                html += `<a class="action btnchat vibration-icon" data-nameaction="chat_coso" data-divid="chatcoso" data-id="${item.id}" data-title="${item.name}" href="#"><i class="fa fa-comments"></i> <div class="animated infinite zoomIn kenit-alo-circle"></div> <div class="animated infinite pulse kenit-alo-circle-fill"></div></a>`;
+            }
             getSelectorCurDiv().html(html);
             $('.slidersing').owlCarousel({
                 loop:true,
@@ -1304,16 +1584,224 @@ function loadscript(name = 'home'){
                 filled: 'fa fa-star',
                 empty: 'fa fa-star-o xam'
             });
+            $('body').scrollTop(0);
+            
+        } else {
+            show_alert(last_res.msg);
+        }
+    } else if(name == 'detaildeal') {
+        if(last_res.status == 'success'){
+            let divcoso = current_tab == 'home' ? 'detaildeal' : 'detaildeal2';
+            change_screen('#' + divcoso);
+            let item = last_res.data;
+            let data = {
+                title: last_res.data.title,
+                slug: last_res.data.alias
+            }
+            // changeStateUrl(data);
+            setNav({canBack: true, canSearch: false, canRefesh: false,title: last_res.data.name, slug: last_res.data.sku});
+            
+            html += '<div class="slidersing owl-theme owl-carousel">';
+            html += `<div class="imgsing" style="background-image: url(${item.link_image})" ></div>`;
+            if(last_res.data.orther_info && last_res.data.orther_info.album){
+                console.log(last_res.data.orther_info.album);
+                let album = last_res.data.orther_info.album;
+                // last_res.data.orther_info.album.map((item2, index) => {
+                //     html += `<div class="imgsing" style="background-image: url(${item2.item2})" ></div>`;
+                // });
+                for (var key of Object.keys(album)) {
+                    html += `<div class="imgsing" style="background-image: url(${album[key]})" ></div>`;
+                    // console.log(key + " -> " + album[key])
+                }
+            }
+            html += '</div>';
+            html += '<div class="infosing"><div class="col-md-12">';
+            html += `<h2 class="namesing">${item.title}</h2>`;
+            html += `<div class="countdown countdownsing mb-5px"  data-ketthuc_at="${item.ketthuc_at}"></div>`;
+            
+            let can = item.quality_getted < item.quality_limit ? true : false;
+            let per = percentage(item.quality_getted, item.quality_limit);
+            
+            html += `
+            <div class="animated-progress progress-blue single">
+                <span class="txt">${item.quality_getted > 0 ? `Đã lấy <span class="txtsl" data-id="${item.id}">` + item.quality_getted + '</span>/' + item.quality_limit: 'Đang hot'}</span>
+                <span class="progress" data-progress="${per}%"></span>
+            </div>`;
+            // if(can) html += `<div class="text-success mb-5px txtsl">Số lượng deal <span class="quality_getted">${item.quality_getted}</span>/${item.quality_limit}</div>`;
+            // else html += `<div class="text-danger mb-5px">${item.quality_limit} deal đã hết</div>`;
+            html += `<div><span class="price" style="margin-right: 15px;">
+                <del>${item.giatruockm ? numberWithCommas(item.giatruockm) : ''}</del>
+                <ins>${item.giachinhthuc ? numberWithCommas(item.giachinhthuc) : '0đ'}</ins>
+            </span>`;
+
+            html += '</div></div><div class="clearfix"></div></div>';
+            html += `<div class="beakline"></div>`;
+                
+            if(item.content) {
+                html += `<div class="content">${item.content}</div>`;
+            }
+            html += `<div class="col-md-12 wpbtnbook">${showBtnGetcode(item, 'deal')}</div>`;
+
+            getSelectorCurDiv().html(html);
+            $('.slidersing').owlCarousel({
+                loop:true,
+                dots: false,
+                nav: false,
+                margin:15,
+                navText: ['', ''],
+                autoplay:true,
+                // center:true,
+                responsive:{
+                    100:{
+                        items:1,
+                    }
+                }
+            });
+            let date = $('.countdownsing').data('ketthuc_at');
+            if(date){
+                $('.countdownsing').countdown(`${date}`, function(event) {
+                    $(this).html(event.strftime('<div class="item"><span>%Hh</span></div> <div class="item"><span>%Mm</span></div> <div class="item"><span>%Ss</span></div>'));
+                    // $(this).html(event.strftime('<div class="item"><span>%d</span><p>Ngày<p></div> <div class="item"><span>%H</span><p>Giờ<p></div> <div class="item"><span>%M</span><p>Phút<p></div> <div class="item"><span>%S</span><p>Giây<p></div>'));
+                }).on('finish.countdown', function(event) {
+                    // console.log('đã xong countdown');
+                    $(this).parents('.deal').addClass('hethan');
+                    $('.btn[data-type="deal"]').removeClass('action');
+                    $('.txtsl').text(`Deal đã hết hạn`);
+                }).on('stop.countdown', function(event) {
+                    // console.log('stop countdown');
+                    $(this).parents('.deal').addClass('hethan');
+                    $('.btn[data-type="deal"]').removeClass('action');
+                    $('.txtsl').text(`Deal đã hết hạn`);
+                });
+            }
+            // console.log(date);
+            $(".animated-progress.single span").each(function () {
+                $(this).css({width: $(this).attr("data-progress")});
+            });
+            $('body').scrollTop(0);
+            
+        } else {
+            show_alert(last_res.msg);
+        }
+    } else if(name == 'slug') {
+        if(last_res.status == 'success'){
+            if(last_res.type == 'coso') {
+                let divcoso = current_tab == 'home' ? 'detailcoso' : 'detailcoso2';
+                let banggiave = current_tab == 'home' ? 'banggiave' : 'banggiave2';
+                change_screen('#' + divcoso);
+                let item = last_res.data;
+                let data = {
+                    title: last_res.data.name,
+                    slug: last_res.data.sku
+                }
+                changeStateUrl(data);
+                setNav({canBack: true, canSearch: false, canRefesh: false,title: last_res.data.name});
+                
+                html += '<div class="slidersing owl-theme owl-carousel">';
+                last_res.images.map((item2, index) => {
+                    html += `<div class="imgsing" style="background-image: url(${item2.linkimg})" ></div>`;
+                });
+                html += '</div>';
+                html += '<div class="infosing"><div class="col-md-12">';
+                html += `<h2 class="namesing">${item.name}</h2>`;
+                html += `<div class="mb-10px">
+                    <span class="star mr-15px"><input type="hidden" data-filled="fa fa-star" data-empty="fa fa-star-o" class="rating" disabled="disabled" value="${item.star}"/></span>
+                    <a href="#" class="like action" data-nameaction="addfavourite" data-id="${item.id}">
+                        <i class="fa red ${checklike(item.id) ? 'fa-heart' : 'fa-heart-o'}"></i>
+                        <span class="red numberlike">${item.solike + item.likecongthem}</span> <span class="black">lượt thích</span>
+                    </a></div>
+                    `;
+                html += `<div><span class="price" style="margin-right: 15px;">
+                        <del>${numberWithCommas(item.giatruockm)}</del>
+                        <ins>${numberWithCommas(item.giachinhthuc)}</ins>
+                    </span>`;
+
+                if(item.banggia) html += `<a href="#" class="btn btn-primary btn-xs action" data-nameaction="modal" data-id="${banggiave}">Xem Bảng Giá <i class="fa fa-long-arrow-right"></i></a>`;
+                html += '</div></div><div class="clearfix"></div></div>';
+
+                html += `<div class="beakline"></div>
+                    <div class="listitem"><a target="_blank" href="https://www.google.com/maps/search/?api=1&query=${item.tdlat},${item.tdlong}"><i class="fa fa-map-marker ico"></i> ${item.diachi}</a> </div>
+                    <div class="listitem"><i class="fa fa-clock-o ogran ico"></i> ${item.giomocua}</div>
+                    <div class="listitem"><a href="tel:${item.phone}"><i class="fa fa-phone gren ico"></i> ${item.phone}</a></div>
+                    `;
+                if(item.thongtincoban.length && item.thongtincoban[0].name) {
+                    html += `<div class="beakline"></div>`;
+                    html += `<h2 class="titlesing col-md-12">Thông Tin Cơ Bản</h2>`;
+                    item.thongtincoban.map((item2, index) => {
+                        if(item2.name && item2.diengiai) html += `<div class="listitem ttcoban"><span class="name">${item2.name}</span> <span>${item2.diengiai}</span></div>`;
+                    });
+                }
+                if(item.noidung) {
+                    html += `<div class="beakline"></div>`;
+                    html += `<div class="content">${item.noidung}</div>`;
+                }
+                html += `<div class="col-md-12 wpbtnbook">${showBtnGetcode(item)}</div>`;
+
+                let banggiahtml = '';
+                item.banggia.map((item2, index) => {
+                    banggiahtml += `<div><b class="pull-left">${item2.name}</b> <span class="pull-right price">
+                        <del>${numberWithCommas(item2.gia1)}</del>
+                        <ins>${numberWithCommas(item2.gia2)}</ins>
+                    </span><div class="clearfix"></div></div>
+                    <p>${item2.diengiai}</p><hr/>
+                    `;
+                });
+                let idbanggia = current_tab == 'home' ? '#ndbanggia' : '#ndbanggia2';
+                $(idbanggia).html(banggiahtml);
+                if(os == 'web' && last_res.data.hoptac ) {
+                    html += `<a class="action btnchat vibration-icon" data-nameaction="chat_coso" data-divid="chatcoso" data-id="${item.id}" data-title="${item.name}" href="#"><i class="fa fa-comments"></i> <div class="animated infinite zoomIn kenit-alo-circle"></div> <div class="animated infinite pulse kenit-alo-circle-fill"></div></a>`;
+                }
+                getSelectorCurDiv().html(html);
+                $('.slidersing').owlCarousel({
+                    loop:true,
+                    dots: false,
+                    nav: false,
+                    margin:15,
+                    navText: ['', ''],
+                    autoplay:true,
+                    // center:true,
+                    responsive:{
+                        100:{
+                            items:1,
+                        }
+                    }
+                });
+                $("input.rating").rating({
+                    filled: 'fa fa-star',
+                    empty: 'fa fa-star-o xam'
+                });
+                $('body').scrollTop(0);
+            } else if(last_res.type == 'news') {
+                let id = 'singlenews_home';
+                current_tabChild[current_tab].child = "#" + id;
+                change_screen("#" + id);
+                setNav({canBack: true, canSearch: false, canRefesh: false,title: last_res.data.name});
+                
+                $('h1').text(last_res.data.name);
+                let data = {
+                    title: last_res.data.name,
+                    slug: last_res.data.alias
+                }
+                changeStateUrl(data);
+                getSelectorCurDiv().empty().append(last_res.data.content);
+                // console.log(namechild);
+            } else if(last_res.type == 'deal') {
+                console.log('deal');
+            }
         } else {
             show_alert(last_res.msg);
         }
     } else if(name == 'getcode') {
         if(last_res.status == 'success') {
             let div = current_tab == 'home' ? '#successbook' : '#successbook2';
+            if(last_res.type == 'deal'){
+                $('.quality_getted, .animated-progress .txtsl[data-id="'+last_res.code.id_target+'"]').text(last_res.data2.quality_getted);
+            }
             $(div + ' .code').text(last_res.code.code);
             $(div + ' .hansudung').text(last_res.code.hethan);
             $(div + ' .txt').text(last_res.msg);
             $(div).addClass('active');
+
         } else {
             show_alert(last_res.msg);
         }
@@ -1335,6 +1823,19 @@ function loadscript(name = 'home'){
                 html += '<p class="col-md-12">Chưa có bài viết nào</p>';
             }
             getSelectorCurDiv().append(html);
+            // console.log(namechild);
+        } else {
+            show_alert(last_res.msg);
+        }
+    } else if(name == 'single') {
+        if(last_res.status == 'success') {
+            $('h1').text(last_res.data.name);
+            let data = {
+                title: last_res.data.name,
+                slug: last_res.data.sku
+            }
+            changeStateUrl(data);
+            getSelectorCurDiv().empty().append(last_res.data.content);
             // console.log(namechild);
         } else {
             show_alert(last_res.msg);
@@ -1423,6 +1924,72 @@ function loadscript(name = 'home'){
         }
     } else if(name == 'resentcode') {
         show_alert(last_res.msg);
+    } else if(name == 'lichsupoint') {
+        if(last_res.status == 'success') {
+            change_screen('#' + name);
+            setNav({canBack: true, canSearch: true, canRefesh: false,title: 'Lịch Sử Giao Dịch'});
+            
+            if(last_res && isObject(last_res) && last_res.points.data && last_res.points.data.length){
+                last_res.points.data.map((item, index) => {
+                    html += getHtml(item, 'lspoint');
+                });
+            } else{
+                getSelectorCurDiv().empty();
+                html += '<p class="col-md-12">Chưa có lịch sử giao dịch nào</p>';
+            }
+            current_tabChild[current_tab][namechild + '_page'] = 1;
+            current_tabChild[current_tab][namechild + '_loadmore'] = true;
+            current_tabChild[current_tab][namechild + '_page'] = last_res.points.current_page;
+            current_tabChild[current_tab][namechild + '_loaded'] = true;
+            if(last_res.points.last_page <= last_res.points.current_page) {
+                current_tabChild[current_tab][namechild + '_maxpage'] = true;
+            }
+            if(last_res.points.current_page == 1) getSelectorCurDiv().empty();
+            getSelectorCurDiv().append(html);
+            current_tabChild[current_tab].child = name;
+
+        } else show_alert(last_res.msg ? last_res.msg : 'Lỗi truy vấn thông tin');
+    } else if(name == 'buyvip') {
+        if(last_res.status == 'success') {
+            user = last_res.user;
+            loadinfoaccount(last_res.user);
+        }
+        show_alert(last_res.msg ? last_res.msg : 'Lỗi truy vấn thông tin');
+    } else if(name == 'save_device') {
+        if(last_res.status == 'success') {
+            if(last_res.user){
+                user = last_res.user;
+                token = last_res.token;
+                user.idDevice = last_res.idDevice;
+                localStorage.setItem('token', token);
+                localStorage.setItem('user', JSON.stringify(user));
+                loadinfoaccount(user);
+                vargoobal.account.canRefesh = true;
+                // $('.refreshbtn').removeClass('hidden');
+                $(`.tabcontent[data-tab="account"] .tabchild`).removeClass('active');
+                $(`.tabcontent[data-tab="account"] #accountlogin`).addClass('active');
+            }
+            if(last_res.token) token = last_res.token;
+            // show_alert(last_res.msg ? last_res.msg : 'Lưu thiết bị thành công');
+        } else show_alert(last_res.msg ? last_res.msg : 'Lỗi truy vấn thông tin');
+    } else if(name == 'getGiovang') {
+        if(last_res.status == 'success') {
+            // current_tabChild[current_tab][namechild + '_loadmore'] = true;
+            // current_tabChild[current_tab][namechild + '_page'] += 1;
+            // let page = current_tabChild[current_tab][namechild + '_page'];
+            // if(last_res.data.current_page >= last_res.data.last_page) {
+            //     current_tabChild[current_tab][namechild + '_maxpage'] = true;
+            // }
+            if(last_res && isObject(last_res) && last_res.data.data && last_res.data.data.length > 0){
+                last_res.data.data.map((item, index) => {
+                    html += getHtml(item,'giovang');
+                    // saveId(item.id);
+                });
+            } else{
+                getSelectorCurDiv().empty();
+                html += '<p class="col-md-12">Chưa có chương trình giờ vàng nào</p>';
+            }
+        } else show_alert(last_res.msg ? last_res.msg : 'Lỗi truy vấn thông tin');
     }
     
 }
@@ -1463,11 +2030,17 @@ function numberWithCommas(x) {
     if(!x) return '0';
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
-function showBtnGetcode(item = null) {
+function showBtnGetcode(item = null, type='coso') {
     if (!item) return '';
-    return `<a href="${item.getcode ? '#' : 'tel:' + item.phone}" class="btn btn-primary btn-block ${item.getcode ? 'action' : ''}" ${item.getcode ? 'data-nameaction="getcode" data-confirm="confirm"' : ''} data-id="${item.id}" data-getcode="${item.getcode}">
+    if(type == 'coso') return `<a href="${item.getcode ? '#' : 'tel:' + item.phone}" class="btn btn-primary btn-block ${item.getcode ? 'action' : ''}" ${item.getcode ? 'data-nameaction="getcode" data-confirm="confirm"' : ''} data-id="${item.id}" data-getcode="${item.getcode}">
         <span>${item.getcode ? 'Lấy Mã Khuyến Mãi' : item.phone}</span>
     </a>`;
+    if(type == 'deal'){
+        let can = item.quality_getted < item.quality_limit ? true : false;
+        return `<a href="#" class="btn ${ can ? 'btn-primary action' : 'btn-default'} btn-block" data-nameaction="getcode" data-type="deal" data-confirm="confirm" data-getcode="1" data-id="${item.id}">
+            <span>${ can ? 'Lấy Mã Deal' : 'Đã Hết'}</span>
+        </a>`;
+    }
 }
 function show_alert(txt, arrj = {}, willdeleteFunc = (willDelete) => {}){
     if(!txt) return;
@@ -1489,6 +2062,10 @@ function getHtml(item = null, type = 'coso'){
     if(!item) return '';
     let html = '';
     if(type == 'coso') {
+        let chat = '';
+        if(os == 'web' && item.hoptac ) {
+            chat += `<a class="action btnchat_item" data-nameaction="chat_coso" data-divid="chatcoso" data-id="${item.id}" data-title="${item.name}" href="#"><i class="fa fa-comments"></i> </a>`;
+        }
         html = `<div class="col-md-12 mb-15px"><div class="coso">
                     <a href="#" class="action wpimg" data-nameaction="detailcoso" data-title="${item.name}" data-id="${item.id}">
                         <div class="img" style="background-image: url(${item.image})"></div>
@@ -1505,10 +2082,10 @@ function getHtml(item = null, type = 'coso'){
                             </div>
                             <div class="diachi mb-10px">${item.diachi}</div>
                         </a>
-                        
+                        ${chat}
                         <a href="#" class="like action" data-nameaction="addfavourite" data-id="${item.id}">
-                        <i class="fa ${checklike(item.id) ? 'fa-heart' : 'fa-heart-o'}"></i>
-                        <p class="numberlike">${item.solike + item.likecongthem}</p>
+                            <i class="fa ${checklike(item.id) ? 'fa-heart' : 'fa-heart-o'}"></i>
+                            <p class="numberlike">${item.solike + item.likecongthem}</p>
                         </a>
                     </div>
                     ${showBtnGetcode(item)}
@@ -1553,7 +2130,7 @@ function getHtml(item = null, type = 'coso'){
         vargoobal[current_tab].loaded = true;
         let bgtop = '';
         html += `<div class="col-md-12 mb-15px"><div class="news">
-            <a href="#" class="action" data-title="${item.name}" data-nameaction="single_news" data-id="singlenews" data-iditem="${item.id}" data-html='${item.content}'>
+            <a href="#" data-slug="${item.alias}" class="action" data-title="${item.name}" data-nameaction="single_news" data-id="singlenews" data-iditem="${item.id}" data-html='${item.content}'>
                 <img src="${item.image}" />
                 <h3 class="name">${item.name}</h3>
                 <p>${item.intro}</p>
@@ -1602,6 +2179,84 @@ function getHtml(item = null, type = 'coso'){
         
         html += `</div>`;
     }
+    if(type == 'lspoint') {
+        vargoobal[current_tab].loaded = true;
+        html += `<div class="col-md-12 mb-15px">`;
+        let SKU_POINT = settings.SKU_POINT;
+        let bg = item.point > 0 ? '#d2fbcf' : '#fbcfe3';
+        let color = item.point > 0 ? '#3a7d21' : '#ff0000';
+        let char = item.point > 0 ? '+' : '';
+        html += `<div class="lspoint" style="background-color: ${bg}; color: ${color}">
+        <div href="#" class="" data-title="${item.name}" data-nameaction="single_news" data-id="singlespin" >
+            <div>
+                <b class="name pull-left">${char}${convertnumber(item.point)}${SKU_POINT}</b>
+                <span class="pull-right ngay">${item.ngay}</span>
+                <div class="clearfix"></div>
+            </div>
+            <p>${item.lydo}</p>`;
+
+        if(item.point < 0) html += `<p>Số ${SKU_POINT} còn lại: ${convertnumber(item.point_cur)}</p>`;
+        html += `<div class="clearfix"></div>
+        </div></div>`;
+        html += `</div>`;
+    }
+    if(type == 'giovang') {
+        let bgtop = '';
+        if (item.tinhtrang === 'xong') {
+            bgtop += `<a href="#" class="bgoverflow pink">Đã hết hạn</a>`;
+        } else if (item.tinhtrang === 'het') {
+            bgtop += `<a href="#" class="bgoverflow pink" >Đã hết vé</a>`;
+        }
+        html += `<div class="col-md-12 mb-15px">${bgtop}<div class="coso code ${item.type != 1 ? 'hot' : ''}">
+            <a href="#" class="action" data-name="detailcoso">
+                <div class="wpimg">
+                    <div class="img" style="background-image: url(${item.anhcoso})"></div>
+                </div>
+                <div class="rightnd mainitemcoso">
+                    <h3 class="name">${item.tencoso}</h3>
+                    <div class="diachi">${item.dccoso}</div>`;
+        // if (item.status === 0) {
+        //     html += `<div class="hancodeMycode">Hạn sử dụng: ${item.hethan}</div>
+        //             <div class="hancodeMycode mb-5px">Khi hết hạn bạn vui lòng tạo mã mới</div>
+        //     `;
+        // } else if(item.status === 10) {
+        //     html += `<div class="dasdMycode mb-5px">Đã sử dụng</div>`;
+        // } else if(item.status === 9) {
+        //     html += `<div class="hethan mb-5px">Đã hết hạn</div>`;
+        // }
+        html += `<div class="mb-5px">Click để lấy vé ngay</div>`;
+        html += `</div><div class="clearfix"></div></a>
+        </div></div>`;
+    }
+    if(type == 'deal') {
+        let per = percentage(item.quality_getted, item.quality_limit);
+        let del = item.giatruockm ? `<del>${numberWithCommas(item.giatruockm)}</del>` : '';
+        html = `<div class="deal">
+            <a href="#" class="action wpimg" data-nameaction="detaildeal" data-title="${item.name}" data-id="${item.id}">
+                <div class="img" style="background-image: url(${item.link_image})"></div>
+            </a>
+            <div class="mainitemdeal">
+                <div class="countdown" data-ketthuc_at="${item.ketthuc_at}"></div>
+                <a href="#" class="action" data-nameaction="detaildeal" data-title="${item.name}" data-id="${item.id}">
+                    <p class="namecoso">${item.coso ? item.coso.name : 'Không xác định'}</p>
+                    <h3 class="name">${item.title}</h3>
+                    <div class="wp-price">
+                        <div class="price">
+                            ${del}
+                            <ins>${item.giachinhthuc ? numberWithCommas(item.giachinhthuc) : '0đ'}</ins>
+                        </div>
+                        <span class="btn btn-xs btn-danger pull-right">Lấy Deal</span>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="animated-progress progress-blue">
+                        <span class="txt">${item.quality_getted > 0 ? 'Đã lấy <span class="txtsl" data-id="${item.id}">' + item.quality_getted + '</span>': 'Đang hot'}</span>
+                        <span class="progress" data-progress="${per}%"></span>
+                    </div>
+                </a>
+            </div>
+            <div class="clearfix"></div>
+        </div>`;
+    }
     return html;
 }
 function getIds(){
@@ -1630,6 +2285,7 @@ function saveId(value, action = 'add'){
 function loadinfoaccount(user) {
     if(!user) return;
     // console.log(user);
+    $('#accountlogin .sopoint').text(numberWithCommas(user.money));
     $('#accountlogin .nameaccount').text(user.firstname);
     $('#accountlogin .sdtaccount').text(user.phone);
     $('#accountlogin .capaccount').text(user.capdo);
@@ -1657,6 +2313,21 @@ function loadinfoaccount(user) {
     $(`.tabcontent[data-tab="${name}"] .tabchild`).removeClass('active');
     $(`.tabcontent[data-tab="${name}"] #accountlogin`).addClass('active');
     $('.requireLogin').removeAttr('requireLogin');
+
+    let moneyvip = settings.moneyvip;
+    let tygia = settings.tygia;
+    let SKU_POINT = settings.SKU_POINT;
+    let money1thang = parseInt(moneyvip[1]) / tygia;
+    let money6thang = parseInt(moneyvip[6]) / tygia;
+    let money12thang = parseInt(moneyvip[12]) / tygia;
+    let tk6 = money1thang * 6 - money6thang;
+    let tk12 = money1thang * 12 - money12thang;
+    $('.SKU_POINT').text(SKU_POINT);
+    $('.money1thang').text(money1thang);
+    $('.money6thang').text(money6thang);
+    $('.money12thang').text(money12thang);
+    $('.tk6').text(tk6);
+    $('.tk12').text(tk12);
 
     updateTabChild();
 }
@@ -1820,4 +2491,58 @@ function centerMap( map ) {
     } else{
         map.fitBounds( bounds );
     }
+}
+
+// function
+function getMobileOS(){
+    const ua = navigator.userAgent
+    if (/android/i.test(ua)) {
+      return "android";
+    }
+    else if((/iPad|iPhone|iPod/.test(ua)) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){
+      return "ios";
+    }
+    return "web";
+}
+function gup( name, url ) {
+    if (!url) url = location.href;
+    name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    var regexS = "[\\?&]"+name+"=([^&#]*)";
+    var regex = new RegExp( regexS );
+    var results = regex.exec( url );
+    return results == null ? null : results[1];
+}
+function uniqId() {
+  return Math.round(new Date().getTime() + (Math.random() * 100));
+}
+function removeLastArr(arr){
+    if(arr.constructor !== Array) return false;
+    const x = arr.pop();
+    var arr2 = [];
+    arr.map(item => {
+        arr2[arr2.length] = item
+    });
+    return arr2;
+}
+function xfocus() {
+    setTimeout(function() {
+      height_old = window.innerHeight;
+      window.addEventListener('resize', xresize);
+    //   document.getElementById('status').innerHTML = 'opened'; // do something instead this
+      $('body').addClass('kbopen');
+    }, 500);
+}
+function xresize() {
+    height_new = window.innerHeight;
+    var diff = Math.abs(height_old - height_new);
+    var perc = Math.round((diff / height_old) * 100);
+    if (perc > 50) xblur();
+}
+function xblur() {
+    window.removeEventListener('resize', xresize);
+    $('body').removeClass('kbopen');
+    // document.getElementById('status').innerHTML = 'closed'; // do something instead this
+}
+function percentage(partialValue, totalValue) {
+    return Math.round((100 * partialValue) / totalValue);
 }

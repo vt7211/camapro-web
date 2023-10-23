@@ -14,7 +14,8 @@ function stripUnicode($str){
 	return $str;
 }
 function curPageURL(){
-    $pageURL = 'http://';
+    $pageURL = 'https://';
+    return $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
     if ($_SERVER["SERVER_PORT"] == "80" )
     {
         $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
@@ -227,7 +228,9 @@ function curl($url, $method = 'get', $header = null, $postdata = null, $timeout 
 
     $html = curl_exec($s);
     //run handler
-
+    if ($html === false) {
+        throw new Exception(curl_error($s), curl_errno($s));
+    }
     $status = curl_getinfo($s, CURLINFO_HTTP_CODE);
     curl_close($s);
 
@@ -263,6 +266,7 @@ function get_client_ip() {
         $ipaddress = getenv('REMOTE_ADDR');
     else
         $ipaddress = 'UNKNOWN';
-    return $ipaddress;
+    $isValid = filter_var($ipaddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+    return $isValid ? $ipaddress : null;
 }
 ?>

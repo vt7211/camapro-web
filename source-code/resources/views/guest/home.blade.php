@@ -14,8 +14,10 @@
 <div class="tabcontent active scrollpane" data-tab="home">
     <div class="main tabchild active listitems" id="dscoso"></div>
     <div class="tabchild listitems pt-10px" id="searchcoso"></div>
-    
     <div class="tabchild bgxam" id="detailcoso"></div>
+    <div class="tabchild" id="singlenews_home"></div>
+    <div class="tabchild" id="detaildeal"></div>
+    <div class="tabchild bgxam" style="padding: 0px;" id="chatcoso"></div>
     <div class="col-md-12 tabchild modal" id="banggiave" >
         <div class="contentmodal">
             <div class="mainmodal">
@@ -39,6 +41,20 @@
             </div>
         </div>
     </div>
+    <div class="col-md-12 tabchild modal" id="candanhagia" >
+        <div class="contentmodal">
+            <div class="mainmodal">
+                <span class="action btnclose" data-nameaction="closemodal"><i class="fa fa-close"></i></span>
+                <h3 class="titlemodal blue text-center">Có Mã Cần Đánh Giá</h3>
+                <div class="noidung">
+                    <div class="text-center">
+                        <p class="mb-10px">Bạn có mã cần đánh giá</p>
+                        <span class="btn btn-block btn-primary action" data-nameaction="view_danhgiacode">Đánh Giá Ngay</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="col-md-12 tabchild modal" id="modalsearchcoso" >
         <div class="contentmodal">
             <div class="mainmodal">
@@ -57,7 +73,7 @@
 </div>
 <div class="tabcontent" data-tab="map">
     <div class="main tabchild active" style="padding-bottom: 0px;" id="map">
-        <div id="acf-map" style="height: calc( 100% - 122px );" data-zoom="16"></div>
+        <div id="acf-map" style="height: calc( 100% - 0px );" data-zoom="16"></div>
     </div>
 </div>
 <div class="tabcontent" data-tab="news">
@@ -81,13 +97,43 @@
         <div class="row">
             <div class="tabchild pb bgxam main" id="accountlogin">
                 <div class="beakline"></div>
+                <div class="listitem red"><span class="title">Số <span class="SKU_POINT"></span></span><span class="sopoint"></span></div>
                 <div class="listitem"><span class="title">Tên</span><span class="nameaccount"></span></div>
                 <div class="listitem"><span class="title">SĐT</span><span class="sdtaccount"></span></div>
                 <div class="listitem"><span class="title">Cấp</span><span class="capaccount"></span></div>
                 <div class="listitem"><span class="title">Điểm</span><span class="diemaccount"></span></div>
                 <div class="beakline"></div>
+                <div class="wpupvip">
+                    <div class="col-sm-12 col-xs-12 col-xxs-12 mb-10px">
+                        <h3 class="namesing" style="color: red;">NÂNG CẤP THÀNH VIÊN VIP</h3>
+                    </div>
+                    <div class="col-sm-4 col-xs-4 col-xxs-4">
+                        <a class="buyvip action" data-confirm="true" data-msgconfirm="Bạn có chắc chắn muốn nâng cấp vip không?" data-month="1" data-nameaction="buyvip" href="#">
+                            <div class="sothangbuy">1 Tháng</div>
+                            <b class="sopointbuy"><span class="money1thang"></span> <span class="SKU_POINT"></span></b>
+                            <p class="buygiam">&nbsp;</p>
+                        </a>
+                    </div>
+                    <div class="col-sm-4 col-xs-4 col-xxs-4">
+                        <a class="buyvip action" data-confirm="true" data-msgconfirm="Bạn có chắc chắn muốn nâng cấp vip không?" style="background-color: #d9dadb" data-nameaction="buyvip" data-month="6" href="#">
+                            <div class="sothangbuy">6 Tháng</div>
+                            <b class="sopointbuy"><span class="money6thang"></span> <span class="SKU_POINT"></span></b>
+                            <p class="buygiam">Giảm <span class="tk6"></span> <span class="SKU_POINT"></span></p>
+                        </a>
+                    </div>
+                    <div class="col-sm-4 col-xs-4 col-xxs-4">
+                        <a class="buyvip action" data-confirm="true" data-msgconfirm="Bạn có chắc chắn muốn nâng cấp vip không?" style="background-color: #f8cd59" data-nameaction="buyvip" data-month="12" href="#">
+                            <div class="sothangbuy">12 Tháng</div>
+                            <b class="sopointbuy"><span class="money12thang"></span> <span class="SKU_POINT"></span></b>
+                            <p class="buygiam">Giảm <span class="tk12"></span> <span class="SKU_POINT"></span></p>
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="beakline"></div>
                 <div class="listitem red"><i class="fa fa-lock ico"></i><span class="hanaccount"></span></div>
-                <div class="listitem"><a class="action" data-nameaction="single" id="actionhdnt" data-id="huongdannaptien" data-title="Hướng dẫn nạp tiền Camapro Vip" href="#"><i class="fa fa-money ico"></i> Hướng dẫn nạp tiền Camapro Vip <i class="fa fa-angle-right"></i></a> </div>
+                <div class="listitem"><a class="action" data-nameaction="single" id="actionhdnt" data-id="huongdannaptien" data-title="Hướng dẫn nạp tiền Camapro Vip" href="#"><i class="fa fa-money ico"></i> Hướng dẫn nạp tiền vào ví Camapro <i class="fa fa-angle-right"></i></a> </div>
+                <div class="listitem"><a class="action" data-nameaction="lichsupoint" data-title="Lịch Sử Giao Dịch {{env('SKU_POINT')}}" href="#"><i class="fa fa-clock-o ico"></i> Lịch Sử Giao Dịch {{env('SKU_POINT')}} <i class="fa fa-angle-right"></i></a> </div>
                 <div class="beakline"></div>
                 <div class="listitem"><a class="action" data-nameaction="listcode" data-title="Mã khuyến mãi của tôi" href="#"><i class="fa fa-tag ico"></i> Mã khuyến mãi của tôi <i class="fa fa-angle-right"></i></a> </div>
                 <div class="listitem"><a class="action" data-nameaction="listfavourite" data-title="Cơ sở yêu thích" href="#"><i class="fa fa-heart-o ico"></i> Cơ sở yêu thích <i class="fa fa-angle-right"></i></a> </div>
@@ -101,6 +147,7 @@
             </div>
             <div class="tabchild" id="huongdannaptien"></div>
             <div class="tabchild" id="quyenloitv"></div>
+            <div class="tabchild listitems pt-10px" id="lichsupoint"></div>
             <div class="tabchild listitems pt-10px" id="listcode"></div>
             <div class="tabchild listitems pt-10px" id="listfavourite"></div>
             <div class="col-md-12 text-center tabchild" id="chinhsuathongtin" style="padding-top: 50px;">
@@ -344,6 +391,7 @@
                 </div>
             </div>
             <div class="tabchild bgxam" id="detailcoso2"></div>
+            <div class="tabchild bgxam" style="padding: 0px;" id="chatcoso2"></div>
             <div class="col-md-12 tabchild modal" id="banggiave2" >
                 <div class="contentmodal">
                     <div class="mainmodal">
@@ -363,6 +411,20 @@
                                 <p><b>Thời hạn sử dụng đến: <span class="text-danger hansudung">12/12/2022</span></b></p>
                                 <p class="text-success txt">Bạn đã lấy mã thành công</p>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 tabchild modal" id="searchlspoint" >
+                <div class="contentmodal">
+                    <div class="mainmodal">
+                        <span class="action btnclose" data-nameaction="closemodal"><i class="fa fa-close"></i></span>
+                        <h3 class="titlemodal blue text-center">Lọc Lịch Sử</h3>
+                        <div class="noidung">
+                            <input type="text" name="tensearch" id="tenlspointsearch" class="form-control mb-15px" placeholder="Tên giao dịch">
+                            <input type="text" name="ngaybatdau" id="ngaybatdaulsp" class="form-control date mb-15px" placeholder="Ngày bắt đầu">
+                            <input type="text" name="ngayketthuc" id="ngayketthuclsp" class="form-control date mb-15px" placeholder="Ngày kết thúc">
+                            <span class="btn btn-block btn-primary action" data-nameaction="act_lichsupoint">Lọc</span>
                         </div>
                     </div>
                 </div>

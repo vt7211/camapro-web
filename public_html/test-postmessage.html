@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <style>
+            body {
+            margin: 20px auto;
+            line-height: 1.6;
+            padding: 0 20px;
+            font-family: Lato, Arial, sans-serif !important;
+            font-size: 12px;
+            color: #444444;
+            }
+
+            .input {
+            width: 50%;
+            margin: 5px;
+            }
+
+            .input input {
+            width: 70%;
+            }
+
+            .output {
+            width: 50%;
+            margin: 5px;
+            }
+
+            .output textarea {
+            width: 100%;
+            }
+
+        </style>
+        <script>
+            window.send = function() {
+                var iframe = document.getElementById('jsfiddle-frame').contentWindow;
+                var message = document.querySelector('#textOutput').value;
+                iframe.postMessage(message, '*');
+            }
+            window.addEventListener('message', function(event) {
+                document.querySelector('#textOutput').value = event.data;
+            }, false);
+
+        </script>
+    </head>
+    <body>
+        <div>
+            <h3>
+            Source
+            </h3>
+            <div class="output">
+              <textarea id='textOutput' rows="7">{"type":"suyncdata","value":{"idDevice":"2ec5bc28-7903-4239-932c-66e4f662a18b","token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvYXBwbXMucXVhbmx5bWF0LmNvbVwvYXBpXC9sb2dpbiIsImlhdCI6MTY4MTEzMjgyOCwiZXhwIjo1MjgxMTMyODI4LCJuYmYiOjE2ODExMzI4MjgsImp0aSI6ImhOUGpNSGlPN1lNQllqWU4iLCJzdWIiOjcsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.jjvQDBFLULR48WSuPDekJdYMfQZZ-UALm_cg9FWQeMI","hasNotch":1}}</textarea>
+              <button onclick="send()">
+                Send
+              </button>
+            </div>
+        </div>
+        <hr>
+        <h3>
+            Target Frame
+        </h3>
+        <iframe width="100%" height="400" id="jsfiddle-frame" src="https://camapro-web.local/" frameborder="0"></iframe>
+    </body>
+</html>

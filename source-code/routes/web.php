@@ -16,6 +16,7 @@
 // });
 
 route::get('/',['as'=>'home', 'uses'=>'GuestController@home']);
+route::get('/{slug}',['as'=>'single', 'uses'=>'GuestController@single']);
 Route::group(['prefix'=>'admin', 'middleware' => ['check','xss']], function(){
     route::get('/',['as'=>'admin.dashboard', 'uses'=>'adminController@dashboard']);
     route::post('checkalias',['as'=>'checkalias', 'uses'=>'AliasController@checkalias']);
@@ -70,6 +71,8 @@ Route::group(['prefix'=>'admin', 'middleware' => ['check','xss']], function(){
         route::get('edit/{type}/{id}',['as'=>'admin.cate.getEdit', 'uses'=>'CateController@getEdit'])->middleware('can:cate.update');
         route::post('edit/{type}/{id}',['as'=>'admin.cate.postEdit', 'uses'=>'CateController@postEdit'])->middleware('can:cate.update');
     });
+});
+Route::group(['prefix'=>'admin', 'middleware' => ['check']], function(){
     route::group(['prefix'=>'setting'], function(){
         route::get('list',['as'=>'admin.setting.getList', 'uses'=>'settingController@getList'])->middleware('can:setting.list');
         route::post('savegeneral',['as'=>'admin.setting.postSavegeneral', 'uses'=>'settingController@postSavegeneral'])->middleware('can:setting.update');

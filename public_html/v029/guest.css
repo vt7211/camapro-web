@@ -12,6 +12,9 @@ Description: hosting, vps ssd, web design, email maketing...
   --mau2:#3559a7;
   --vang:#5db73c;
   --den:#222;
+  --r1: 26;
+  --g1: 115;
+  --b1: 169;
 }
 .row2{
   margin-left:-5px;
@@ -319,12 +322,23 @@ html{
   overflow-x: hidden;
 }
 body {
-    line-height: 25px;
-    font-size: 17px;
-    color:#111;
-    background:#f5f5f5;
-    font-family: 'Roboto Condensed', sans-serif;
-    font-weight: 500;
+  line-height: 25px;
+  font-size: 17px;
+  color:#111;
+  background:#f5f5f5;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-weight: 500;
+}
+.hasNotch .application--wrap{
+  padding-top: 90px;
+  padding-bottom: 80px;
+}
+.hasNotch header{
+  padding-top: 43px;
+  height: 90px;
+}
+.hasNotch footer{
+  padding-bottom: 20px;
 }
 ol, ul {
     list-style: none;
@@ -432,6 +446,7 @@ img{
   display: inline-block !important;
   width: 49.5%;
   padding: 5px 3px;
+  height: 30px;
 }
 #ui-datepicker-div{
   z-index: 999 !important;
@@ -739,6 +754,22 @@ input[type="radio"]:disabled + label:before, input[type="radio"]:disabled + span
   color: #ccc;
 }
 
+/*** fulliframe ***/
+.fulliframe footer,
+.fulliframe header{
+  display: none;
+}
+.fulliframe #content,
+.fulliframe .application--wrap,
+.fulliframe .tabchild.active{
+  height: 100% !important;
+  min-height: 100% !important;
+  padding: 0px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  background-color: white;
+}
+
 /*** general ***/
 .container{
   max-width: 100%;
@@ -758,6 +789,9 @@ body{
 .tabcontent, .tabchild{
   display: none;
   overflow: hidden;
+}
+.tabcontent{
+  padding-bottom: 60px;
 }
 .tabchild{
   padding-bottom: 15px;
@@ -785,6 +819,19 @@ body{
   border-radius: 15px 15px 0px 0px;
   overflow-y: auto;
   max-height: calc( 100% - 150px );
+  transition: all 1s;
+}
+.kbopen{
+  background-color: #e5e5e5;
+}
+.kbopen .contentmodal{
+  bottom: 0px;
+}
+.kbopen #content{
+  height: 100vh !important;
+}
+.kbopen .application--wrap{
+  padding-bottom: 0px;
 }
 .mainmodal{
   position: relative;
@@ -818,6 +865,14 @@ body{
 .tabcontent.active, .tabchild.active{
   display: block;
 }
+.fulliframe .tabcontent.active, .fulliframe .tabchild.active{
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  border: 0px;
+}
 .tabcontent .bgxam{
   background-color: #f0f0f0;
 }
@@ -826,7 +881,7 @@ body{
 }
 #content{
   background-color: white;
-  /* height: calc( 100vh - 120px ); */
+  height: calc( 100vh - 120px ) !important;
   position: relative;
 }
 #support{
@@ -850,6 +905,9 @@ body{
   align-items: center;
   height: calc( 100% - 135px );
   width: 100%;
+}
+#iframespin{
+  min-height: calc( 100vh - 120px );
 }
 @media ( max-width: 767px ){}
 @media ( min-width: 720px ){
@@ -886,7 +944,7 @@ header a:active{
 header .fa{
   font-size: 22px;
 }
-.colmidhead{
+.colmidhead, .colmidhead h1, .colmidhead h2, .colmidhead h3{
   text-align: center;
   font-size: 16px;
   font-weight: bold;
@@ -896,17 +954,157 @@ header .fa{
 }
 
 /*** slider ***/
-.slider{
-  max-height: 170px;
-  margin-bottom: 10px;
-}
 .slider img{
-  max-height: 170px;
   width: auto !important;
   margin: 0px auto;
 }
+.owl-dots{
+  position: absolute;
+  bottom: 10px;
+  left: 0px;
+  width: 100%;
+}
+.owl-theme .owl-dots .owl-dot span{
+  height: 15px;
+  width: 15px;
+}
+.owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span{
+  background-color: var(--mau1);
+}
+
+/*** deal ***/
+.wpdeals{
+  background-color: #f5f5f5;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.deal{
+  margin-bottom: 15px;
+  border-radius: 7px;
+  background-color: #fff;
+  box-shadow: 0px 0px 5px #e0e0e0;
+  position: relative;
+}
+.deal.hethan:before{
+  background-color: rgba(251, 3, 139, 0.2);
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  left: 0px;
+  top: 0px;
+  border-radius: 7px;
+}
+.deal.hethan:after{
+  position: absolute;
+  content: "Hết Hạn";
+  width: 100%;
+  z-index: 10;
+  left: 0px;
+  top: calc( 50% - 10px );
+  color: white;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+.deal .img{
+  width: 100%;
+  height: 170px;
+  background-size: 100% auto;
+  margin-bottom: 10px;
+  border-radius: 7px 7px 0px 0px;
+}
+.mainitemdeal{
+  padding: 0px 10px 10px 10px;
+}
+.deal .name{
+  font-size: 17px;
+  line-height: 25px;
+  max-height: 50px;
+  overflow: hidden;
+  font-weight: bold;
+  margin: 0px;
+  display: block;
+}
+.deal .namecoso{
+  color: #777;
+  font-size: 15px;
+}
+.deal .countdown{
+  margin-bottom: 2px;
+}
+.deal .price{
+  float: left;
+  margin-bottom: 5px;
+  width: calc( 100% - 75px );
+}
+.deal .price del{
+  display: block;
+}
+.deal .price ins{
+  font-size: 20px;
+}
+.btn-danger-outline{
+  border-color: #ED2716;
+  color: #ED2716;
+}
+.btn-success-outline{
+  border-color: #007529;
+  color: #007529;
+}
+.deal .btn{
+  padding: 5px 5px;
+  font-size: 13px;
+  line-height: 12px;;
+}
+.countdown .item{
+  background-color: #fff;
+  padding: 3px 7px;
+  line-height: 18px;
+  color: #ED2716;
+  border: 1px solid #ED2716;
+  font-size: 13px;
+  display: inline-block;
+  margin: 0px 2px;
+  border-radius: 3px;
+  margin-bottom: 3px;
+  box-shadow: 0px 0px 2px #aaa;
+}
+.animated-progress {
+  width: 100%;
+  max-width: 300px;
+  height: 15px;
+  border-radius: 5px;
+  margin: 5px 0px 7px 0px;
+  background-color: #82d19e;
+  overflow: hidden;
+  position: relative;
+}
+.animated-progress .txt{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  z-index: 10;
+  color: white;
+  line-height: 15px;
+  font-size: 13px;
+  padding-right: 5px;
+}
+.animated-progress .progress {
+  position: absolute;
+  height: 100%;
+  display: block;
+  background-color: #007529;
+  /* width: attr(data-progress); */
+}
 
 /*** co so ***/
+.wplistcoso{
+  background-color: white;
+  padding-top: 15px;
+}
 .title-home{
   font-size: 19px;
   text-transform: uppercase;
@@ -915,6 +1113,24 @@ header .fa{
   font-weight: bold;
   line-height: 30px;
 }
+.wptitle-img{
+  margin-bottom: 10px;
+}
+.wptitle-img h3{
+  display: inline-block;
+  font-size: 19px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  color: red;
+  font-weight: bold;
+  line-height: 30px;
+  float: left;
+  margin-right: 10px;
+}
+.wptitle-img img{
+  display: inline-block;
+  max-height: 30px;
+}
 .coso{
   background: #fff url("/images/bg-ma-km.jpg") no-repeat center center;
   background-size: 100% 100%;
@@ -922,6 +1138,9 @@ header .fa{
   padding: 10px;
   position: relative;
   box-shadow: 0px 0px 6px #999;
+}
+.coso.hot{
+  background-image: #fff url("/images/bg-ma-km-hong.jpg");
 }
 .coso > *{
   vertical-align: top;
@@ -1028,6 +1247,117 @@ header .fa{
 .bgoverflow.transparent{
   background: transparent;
 }
+.btnchat{
+  position: fixed;
+  bottom: 150px;
+  right: 15px;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  background-color: var(--mau1);
+  box-shadow: 0px 0px 4px #ccc;
+  z-index: 50;
+  border-radius: 50%;
+  font-size: 22px;
+}
+.btnchat_item{
+  position: absolute;
+  top: 30px;
+  right: 55px;
+  text-align: center;
+  z-index: 10;
+  font-size: 22px;
+  color: var(--mau1);
+}
+.btnchat_item .fa{
+  font-size: 30px;
+}
+.btnchat i{
+  line-height: 50px;
+  color: #fff;
+  position: relative;
+  z-index: 9;
+}
+.animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  opacity: 1;
+}
+.kenit-alo-circle-fill {
+  width: 60px;
+  height: 60px;
+  top: -5px;
+  right: -5px;
+  position: absolute;
+  transition: all 0.2s ease-in-out;
+  border-radius: 100%;
+  border: 2px solid transparent;
+  transition: all 0.5s;
+  background-color: rgba(var(--r1), var(--g1), var(--b1), 0.5);
+  opacity: 0.75;
+}
+.animated.infinite {
+  animation-iteration-count: infinite;
+}
+.zoomIn {
+  animation-name: customzoomIn;
+  animation-iteration-count: infinite;
+  width: 65px;
+  height: 65px;
+  top: -7px;
+  right: -7px;
+  position: absolute;
+  background-color: transparent;
+  border-radius: 100%;
+  border: 2px solid rgba(var(--r1), var(--g1), var(--b1), 0.4);
+  opacity: 0.1;
+  border-color: var(--mau1);
+  opacity: 0.5;
+}
+.vibration-icon {
+  -webkit-animation: phonering-alo-circle-img-anim 1s infinite ease-in-out;
+}
+
+@keyframes phonering-alo-circle-img-anim {
+  0% {
+      -webkit-transform: rotate(0) scale(1) skew(1deg);
+  }
+
+  10% {
+      -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
+  }
+
+  20% {
+      -webkit-transform: rotate(25deg) scale(1) skew(1deg);
+  }
+
+  30% {
+      -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
+  }
+
+  40% {
+      -webkit-transform: rotate(25deg) scale(1) skew(1deg);
+  }
+
+  50% {
+      -webkit-transform: rotate(0) scale(1) skew(1deg);
+  }
+
+  100% {
+      -webkit-transform: rotate(0) scale(1) skew(1deg);
+  }
+}
+
+@keyframes customzoomIn {
+  0% {
+      opacity: 0;
+      transform: scale3d(0.3, 0.3, 0.3);
+  }
+
+  50% {
+      opacity: 1;
+  }
+}
 @media (max-width: 719px){
   .coso .img{
     width: 90px;
@@ -1035,6 +1365,11 @@ header .fa{
   }
   .mainitemcoso{
     width: calc( 100% - 110px );
+  }
+}
+@media (min-width: 720px){
+  .btnchat{
+    right: calc( 50% - 350px );
   }
 }
 
@@ -1151,6 +1486,10 @@ footer{
   max-width: 720px;
   background-color: #e5e5e5;
   box-shadow: 0px 0px 6px #999;
+  transition: all 1s;
+}
+.kbopen footer{
+  bottom: -70px;
 }
 footer a, 
 footer a:hover,
@@ -1323,6 +1662,13 @@ footer li.active a{
 .content table tr:nth-of-type(2n+1) {
   background-color: #f9f9f9;
 }
+.content ol li {
+  list-style: decimal;
+  margin-left: 15px
+}
+.content ul li {
+  list-style: inside
+}
 .relative{
   position:relative;
 }
@@ -1383,6 +1729,39 @@ footer li.active a{
 }
 .vongquay p{
   color: #888;
+}
+
+/*** lspoint ***/
+.lspoint{
+  padding: 10px;
+  border-radius: 7px;
+}
+.lspoint .ngay{
+  font-size: 13px;
+}
+
+/*** wpupvip ***/
+.wpupvip{
+  background-color: #fcebec;
+  padding: 15px 5px 15px 5px;
+  display: block;
+}
+.buyvip{
+  background-color: #D3B779;
+  padding: 10px;
+  text-align: center;
+  color: #222;
+  border-radius: 7px;
+  display: block;
+  box-shadow: 0px 0px 5px #ccc;
+}
+.sopointbuy{
+  color: red;
+  display: block;
+} 
+.buygiam{
+  color: #777;
+  font-size: 15px;
 }
 
 /*** spin ***/

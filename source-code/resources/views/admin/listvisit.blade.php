@@ -51,7 +51,8 @@ tr.shown td.details-control {
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <button type="submit" class="btn btn-primary mb-2">Lọc</button>
         </form>
-       <div class="card-body">
+        <div class="card-body">
+           <p>Tổng cộng: <span class="text-danger">{{ number_format($visits->total()) }}</span></p>
           <table id="table" class="table ">
              <thead>
                 <tr>
