@@ -16,7 +16,7 @@ Description: hosting, vps ssd, web design, email maketing...
   --g1: 100;
   --b1: 40;
   --topPadding: 60px;
-  --bottomPadding: 70px;
+  --bottomPadding: 60px;
 }
 .btn-primary {
   color: #fff;
@@ -785,7 +785,7 @@ input[type="radio"]:disabled + label:before, input[type="radio"]:disabled + span
 /*** fulliframe ***/
 .fulliframe footer,
 .fulliframe header{
-  display: none !important;
+  display: none;
 }
 .fulliframe #content,
 .fulliframe .application--wrap,
@@ -799,9 +799,6 @@ input[type="radio"]:disabled + label:before, input[type="radio"]:disabled + span
 }
 
 /*** general ***/
-.flex{
-  display: flex;
-}
 .container{
   max-width: 100%;
 }
@@ -986,19 +983,10 @@ header a:active{
 header .fa{
   font-size: 22px;
 }
-.colmidhead.hasLogo .maintitle, .colmidhead img{
-  display: none;
-  margin: 0px auto;
-}
 .colmidhead, .colmidhead h1, .colmidhead h2, .colmidhead h3{
   text-align: center;
   font-size: 16px;
   font-weight: bold;
-  display: inline-block;
-  margin: 0px auto;
-}
-.colmidhead.hasLogo img{
-  display: block;
 }
 .backbtn, .searchbtn, .refreshbtn{
   padding: 0px 10px;
@@ -1009,16 +997,10 @@ header .fa{
   overflow: hidden;
   margin-top: calc(var(--topPadding) * -1);
 }
-.header1 img{
-  max-height: 40px;
-  padding: 5px;
-  border-radius: 50%;
-  background-color: white;
-}
 .header2 .bg{
   content: "";
-  background: var(--mau1);
-  background: linear-gradient(135deg, var(--mau1), var(--mau2));
+  background: #EB6529;
+  background: linear-gradient(135deg, #EB6529, #EB2424);
   border-radius: 100%;
   position: absolute;
   height: 300px;
@@ -1031,8 +1013,8 @@ header .fa{
   height: 170px;
   padding: 5px;
   background-color: white;
-  background: var(--mau1);
-  background: linear-gradient(135deg, var(--mau1), var(--mau2));
+  background: #EB6529;
+  background: linear-gradient(135deg, #EB6529, #EB2424);
   /* border-width: 4px;
   border-style: solid;
   border-image: linear-gradient(to right, var(--mau1), var(--mau2)) 1; */
@@ -1055,23 +1037,6 @@ header .fa{
   display: inline-block;
   margin: 0px auto;
   max-width: 80%;
-}
-.logged-in .topheader{
-  position: fixed;
-  /* display: none; */
-  top: 0px;
-  left: 0px;
-  z-index: 100;
-  color: white;
-  width: 100%;
-  padding: 10px 0px;
-  display: flex;
-  align-items: center;
-  background: var(--mau1);
-  background: linear-gradient(166deg, var(--mau1), var(--mau2));
-}
-.topheader{
-  display: none;
 }
 
 /*** slider ***/
@@ -1622,12 +1587,14 @@ header .fa{
 }
 .wpbtnbook{
   position: fixed;
-  bottom: var(--bottomPadding);
+  bottom: 60px;
   width: 100%;
   max-width: 720px;
   z-index: 10;
   padding-top: 10px;
   padding-bottom: 10px;
+  box-shadow: 0px 0px 4px #999;
+  background-color: white;
 }
 .black{
   color: black;
@@ -1724,6 +1691,11 @@ footer .fa{
   font-size: 20px;
   display: block;
   line-height: 22px;
+}
+@media (min-width: 768px){
+  footer{
+    left: calc( 50% - 350px );
+  }
 }
 
 /*** account ***/
@@ -2013,47 +1985,6 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
   font-size: 15px;
 }
 
-/* alertCode */
-.alertCode{
-  padding: 10px;
-  border-radius: 10px;
-  background-color: #e3fcec;
-  box-shadow: 0px 0px 4px #ccc;
-  position: fixed;
-  bottom: -110vh;
-  left: 10px;
-  z-index: 111;
-  display: flex;
-  justify-content: flex-start;
-  width: calc( 100% - 20px );
-  max-width: 700px;
-  line-height: 1.4;
-  transition: all 1s;
-  opacity: 0;
-}
-.alertCode.active{
-  bottom: calc( var(--bottomPadding) + 10px );
-  opacity: 1;
-}
-.nameCSAlert{
-  color: var(--mau1);
-}
-.alertCode .img{
-  border-radius: 50%;
-  height: 67px;
-  width: 67px;
-  margin-right: 15px;
-  background-position: center center;
-  background-size: auto 100%;
-}
-.nameCSAlert{
-  font-weight: bold;
-}
-.wpTimeAlert{
-  color: #999;
-  font-size: 14px;
-}
-
 /*** spin ***/
 .lds-roller {
   display: inline-block;
@@ -2159,11 +2090,6 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 
 
 /*** responsive ***/
-@media (min-width: 768px){
-  footer, .alertCode{
-    left: calc( 50% - 350px );
-  }
-}
 @media (min-width: 1160px) {
   .modal-lg {
     width: 1160px;

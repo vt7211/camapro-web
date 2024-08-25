@@ -15,13 +15,13 @@
    <meta property="og:description" content="@yield('description')" />
    <meta property="og:type" content="article" />
    <meta property="og:image:alt" content="Camapro Săn vé Massage Miễn Phí" />
-   <meta name="theme-color" content="#1a73a9" >
+   <meta name="theme-color" content="#a01503" >
    <meta name="domainchat" content="{{str_replace('/api','',env('DOMAIN_API'))}}" >
 
    <link rel="manifest" href="/manifest.json">     
    <meta name="msapplication-TileColor" content="#ffffff">
    <meta name="msapplication-TileImage" content="/logos/icon_144.png">
-   <meta name="theme-color" content="#EB6428">
+   <meta name="theme-color" content="#a01503">
    <meta name="apple-mobile-web-app-capable" content="yes">
    <meta name="apple-mobile-web-app-status-bar-style" content="green">
    <meta name="apple-mobile-web-app-title" content="FreeCodeCamp">
@@ -45,7 +45,8 @@
    <link href="{{ URL('assets/guest/css/owl.theme.default.css') }}" rel="stylesheet" type="text/css" />
    <link href="{{ URL('assets/guest/css/owl.carousel.min.css') }}" rel="stylesheet" type="text/css" />
    <link href="{{ URL('assets/guest/css/bootstrap-rating.css') }}" rel="stylesheet" type="text/css" />
-   <link href="{{ URL('v029/guest.css?69') }}" rel="stylesheet" type="text/css" />
+   <link href="{{ URL('v029/guest.css?64') }}" rel="stylesheet" type="text/css" />
+   <link href="{{ URL('tet/tet.css?5') }}" rel="stylesheet" type="text/css" />
    <!-- BEGIN CSS for this page -->
    @yield("css")
    <!-- END CSS for this page -->
@@ -67,7 +68,7 @@
       window.addEventListener('resize', () => {
          // We execute the same script as before
          let vh = window.innerHeight * 0.01;
-         // console.log('vh', vh);
+         console.log('vh', vh);
          document.documentElement.style.setProperty('--vh', `${vh}px`);
          $('.fulliframe .tabcontent.active, .fulliframe .tabchild.active').height(window.innerHeight);
       });
@@ -163,46 +164,25 @@
    </script>
 <?php echo $data['codeheader']['value']; ?>
 </head>
-<body class="head1 <?php if(Route::current()->getName()=='home') echo 'home'; ?> guest">
+<body class="<?php if(Route::current()->getName()=='home') echo 'home'; ?> guest">
 <div class="application--wrap">
 <div class="wploading">
  <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
 </div>
 
-<header class="header1 ">
+<header>
    <div class="container">
-      <div class="row flex">
-         <div class="col-sm-2 col-xs-2 col-xxs-2 collefthead">
+      <div class="row">
+         <div class="col-sm-2 col-xs-2 col-xxs-2 collefthead">&nbsp;
             <a href="#" class="backbtn hidden action" data-nameaction="back"><i class="fa fa-angle-left"></i> </a>
          </div>
-         <div class="col-sm-8 col-xs-8 col-xxs-8 colmidhead hasLogo text-center">
-            <img src="/images/logo-md.png" class="logobar" alt="">
-            <h1 class="maintitle">Massage</h1>
+         <div class="col-sm-8 col-xs-8 col-xxs-8 colmidhead text-center">
+            <h1>Massage</h1>
          </div>
          <div class="col-sm-2 col-xs-2 col-xxs-2 colrighthead text-right">
             <a href="#" class="searchbtn action" data-nameaction="searchcoso" data-id="searchcoso" data-title="Tìm Kiếm Cơ Sở"><i style="font-size: 17px;" class="fa fa-search"></i> </a>
             <a href="#" class="refreshbtn hidden action" data-nameaction="refresh"><i class="fa fa-refresh"></i> </a>
          </div>
-      </div>
-   </div>
-</header>
-<header class="header2">
-   <div class="topheader">
-      <div class="col-sm-2 col-xs-2 col-xxs-2 collefthead">&nbsp;
-         <a href="#" class="backbtn hidden action" data-nameaction="back"><i class="fa fa-angle-left"></i> </a>
-      </div>
-      <div class="col-sm-8 col-xs-8 col-xxs-8 colmidhead text-center">
-         <h1>Massage</h1>
-      </div>
-      <div class="col-sm-2 col-xs-2 col-xxs-2 colrighthead text-right">
-         <a href="#" class="searchbtn action" data-nameaction="searchcoso" data-id="searchcoso" data-title="Tìm Kiếm Cơ Sở"><i style="font-size: 17px;" class="fa fa-search"></i> </a>
-         <a href="#" class="refreshbtn hidden action" data-nameaction="refresh"><i class="fa fa-refresh"></i> </a>
-      </div>
-   </div>
-   <div class="bg"></div>
-   <div class="logocir">
-      <div class="wplogo">
-         <img src="/images/logo-md.png" alt="logo" class="mb-20px" style="">
       </div>
    </div>
 </header>

@@ -21,7 +21,7 @@
    <link rel="manifest" href="/manifest.json">     
    <meta name="msapplication-TileColor" content="#ffffff">
    <meta name="msapplication-TileImage" content="/logos/icon_144.png">
-   <meta name="theme-color" content="#EB6428">
+   <meta name="theme-color" content="#1a73a9">
    <meta name="apple-mobile-web-app-capable" content="yes">
    <meta name="apple-mobile-web-app-status-bar-style" content="green">
    <meta name="apple-mobile-web-app-title" content="FreeCodeCamp">
@@ -45,7 +45,7 @@
    <link href="{{ URL('assets/guest/css/owl.theme.default.css') }}" rel="stylesheet" type="text/css" />
    <link href="{{ URL('assets/guest/css/owl.carousel.min.css') }}" rel="stylesheet" type="text/css" />
    <link href="{{ URL('assets/guest/css/bootstrap-rating.css') }}" rel="stylesheet" type="text/css" />
-   <link href="{{ URL('v029/guest.css?69') }}" rel="stylesheet" type="text/css" />
+   <link href="{{ URL('v029/guest.css?63') }}" rel="stylesheet" type="text/css" />
    <!-- BEGIN CSS for this page -->
    @yield("css")
    <!-- END CSS for this page -->
@@ -171,13 +171,12 @@
 
 <header class="header1 ">
    <div class="container">
-      <div class="row flex">
-         <div class="col-sm-2 col-xs-2 col-xxs-2 collefthead">
+      <div class="row">
+         <div class="col-sm-2 col-xs-2 col-xxs-2 collefthead">&nbsp;
             <a href="#" class="backbtn hidden action" data-nameaction="back"><i class="fa fa-angle-left"></i> </a>
          </div>
-         <div class="col-sm-8 col-xs-8 col-xxs-8 colmidhead hasLogo text-center">
-            <img src="/images/logo-md.png" class="logobar" alt="">
-            <h1 class="maintitle">Massage</h1>
+         <div class="col-sm-8 col-xs-8 col-xxs-8 colmidhead text-center">
+            <h1>Massage</h1>
          </div>
          <div class="col-sm-2 col-xs-2 col-xxs-2 colrighthead text-right">
             <a href="#" class="searchbtn action" data-nameaction="searchcoso" data-id="searchcoso" data-title="Tìm Kiếm Cơ Sở"><i style="font-size: 17px;" class="fa fa-search"></i> </a>
@@ -187,18 +186,6 @@
    </div>
 </header>
 <header class="header2">
-   <div class="topheader">
-      <div class="col-sm-2 col-xs-2 col-xxs-2 collefthead">&nbsp;
-         <a href="#" class="backbtn hidden action" data-nameaction="back"><i class="fa fa-angle-left"></i> </a>
-      </div>
-      <div class="col-sm-8 col-xs-8 col-xxs-8 colmidhead text-center">
-         <h1>Massage</h1>
-      </div>
-      <div class="col-sm-2 col-xs-2 col-xxs-2 colrighthead text-right">
-         <a href="#" class="searchbtn action" data-nameaction="searchcoso" data-id="searchcoso" data-title="Tìm Kiếm Cơ Sở"><i style="font-size: 17px;" class="fa fa-search"></i> </a>
-         <a href="#" class="refreshbtn hidden action" data-nameaction="refresh"><i class="fa fa-refresh"></i> </a>
-      </div>
-   </div>
    <div class="bg"></div>
    <div class="logocir">
       <div class="wplogo">

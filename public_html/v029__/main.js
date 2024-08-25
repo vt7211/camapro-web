@@ -1,4 +1,4 @@
-let loading = { 
+let loading = {
     aInternal: 10,
     aListener: function(val) {},
     set value(val) {
@@ -428,9 +428,6 @@ $(document).ready(function(){
             })
         }, 1000);
     }
-    setTimeout(() => {
-        showAlertCode();
-    }, randomInteger(10000,20000));
 
 });
 function isEmail(email) {
@@ -471,60 +468,6 @@ function convertnumber(str) {
 }
 
 // function
-function showAlertCode() {
-    // clearInterval(intervalAlert);
-    if(!$('.alertCode').hasClass('active') && current_tab == 'home'){
-        let par = {
-            noloading: true, 
-            userID: user ? user.id : null, 
-            getAllCS: 1,
-            os: getMobileOS()
-        };
-        if(current_tabChild.home.child == 'detailcoso') {
-            par.getAllCS = 0;
-        }
-        let seconds = randomInteger(10,60);
-        if(par.getAllCS == 0) seconds *= 3;
-        getData('get-moi-lay-code',par,{}).then((res) => {
-            if(res.status == 'success') {
-                // if(nameaction == 'logout') logout();
-                if(res.status == 'success'){
-                    let namecs = par.getAllCS && res.coso ? res.coso.name : $('.maintitle').text();
-                    $('.alertCode').addClass('active');
-                    $('.nameUsserAlert').text(res.user.firstname);
-                    $('.alertCode .img').css('background-image', `url(${res.coso.image})`);
-                    $('.phoneUsserAlert').text(res.user.phone);
-                    $('.nameCSAlert').text(namecs);
-                    $('.timeAlert').text(secondsToHms(seconds * 3));
-                    setTimeout(() => {
-                        $('.alertCode').removeClass('active');
-                    }, 5000);
-                    setTimeout(() => {
-                        showAlertCode();
-                    }, seconds * 1000);
-                }
-                // console.log('get-moi-lay-code',seconds, res);
-            }else{
-                show_alert(res.msg ? res.msg : 'Lỗi kết nối');
-            }
-            return false;
-        });
-    }
-}
-function secondsToHms(d) {
-    d = Number(d);
-    var h = Math.floor(d / 3600);
-    var m = Math.floor(d % 3600 / 60);
-    var s = Math.floor(d % 3600 % 60);
-
-    var hDisplay = h > 0 ? h + (h == 1 ? " giờ, " : " giờ, ") : "";
-    var mDisplay = m > 0 ? m + (m == 1 ? " phút, " : " phút, ") : "";
-    var sDisplay = s > 0 ? s + (s == 1 ? " giây" : " giây") : "";
-    return hDisplay + mDisplay + sDisplay; 
-}
-function randomInteger(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 function changeStateUrl(data){
     data = {
         type: 'chi-tiet-co-so',
@@ -617,19 +560,7 @@ function setNav(navtemp = null){
     let url = location.pathname.split('/').slice(1);
     temp.slug = url && url[0] ? url[0] : null;
     temp.title = document.title;
-    checkShowLogoNav(navtemp.showlogo);
     return temp;
-}
-function checkShowLogoNav(checkshow = true){
-    // if(typeof checkshow !== "undefined") checkshow = true;
-    // let countLogo = parseInt($('.header1 .collefthead a').not(".hidden").length);
-    // console.log('countLogo', countLogo);
-    // if(countLogo > 1 || !checkshow){
-    if(current_tabChild[current_tab].child == 'dscoso'){
-        $('.colmidhead').addClass('hasLogo');
-    }else{
-        $('.colmidhead').removeClass('hasLogo');
-    }
 }
 function change_screen(item = null) {
     // for change div active inside in child tab
@@ -660,7 +591,7 @@ function getSelectorCurDiv(){
 }
 function getData(name, params = {}, headers = {}) {
     if(!isString(name)) return false;
-    if(!params.noloading) loading.value = true;
+    loading.value = true;
     // token = 111;
     if( token ) headers.Authorization = `Bearer ${token}`;
     // console.log('getData start');
@@ -934,7 +865,6 @@ async function doAction(item = null, respon = null){
                 $('.tabfooter[data-tab="account"]').click();
             }else{
                 loading.value = true;
-                $('.logobar').addClass('hidden');
                 let title = item ? item.data('title') : respon.title;
                 let codelogin = !respon ? user.codelogin : respon.codelogin;
                 let phone = !respon ? user.phone : respon.phone;
@@ -967,7 +897,7 @@ async function doAction(item = null, respon = null){
                     };
                     iframe.postMessage(JSON.stringify(message), '*');
                     change_screen("#" + divid);
-                    setNav({canBack: true, canSearch: false, canRefesh: false, fulliframe: true,title,showlogo: false});
+                    setNav({canBack: true, canSearch: false, canRefesh: false, fulliframe: true,title});
                     loading.value = false;
                 }, 300);
                 $('body').scrollTop(0);
@@ -1061,7 +991,7 @@ async function doAction(item = null, respon = null){
         let trunggiai = last_res.trunggiai;
         let bill = trunggiai.bill;
         let divitem = $('#spin_item_' + bill);
-        if(divitem.length){
+        if(divitem.lenght){
             let html = '';
             if (trunggiai.status ) {
                 let thoigian = moment().add(1, 'months').format("DD/MM/YYYY HH:mm");
@@ -1651,7 +1581,7 @@ function loadscript(name = 'home'){
             if(item.giamkhac) price_html += `<ins>${item.giamkhac}</ins>`;
             else{
                 if(item.giatruockm) price_html += `<del>${numberWithCommas(item.giatruockm)}</del>`;
-                price_html += `<ins>${numberWithCommas(item.giachinhthuc)}</ins>`;
+                if(item.giachinhthuc) price_html += `<ins>${numberWithCommas(item.giachinhthuc)}</ins>`;
             }
             
             html += `<div><span class="price" style="margin-right: 15px;">
@@ -2288,7 +2218,7 @@ function getHtml(item = null, type = 'coso'){
         if(item.giamkhac) price_html += `<ins>${item.giamkhac}</ins>`;
         else{
             if(item.giatruockm) price_html += `<del>${numberWithCommas(item.giatruockm)}</del>`;
-            price_html += `<ins>${numberWithCommas(item.giachinhthuc)}</ins>`;
+            if(item.giachinhthuc) price_html += `<ins>${numberWithCommas(item.giachinhthuc)}</ins>`;
         }
         html = `<div class="col-md-12 mb-15px"><div class="coso">
             <a href="#" class="action wpimg" data-nameaction="detailcoso" data-title="${item.name}" data-id="${item.id}">
@@ -2561,7 +2491,6 @@ function saveId(value, action = 'add'){
 function loadinfoaccount(user) {
     if(!user) return;
     // console.log(user);
-    $('body').addClass('logged-in');
     $('#accountlogin .sopoint').text(numberWithCommas(user.money));
     $('#accountlogin .nameaccount').text(user.firstname);
     $('#accountlogin .sdtaccount').text(user.phone);
@@ -2631,7 +2560,6 @@ function logout(){
     token = null;
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    $('body').removeClass('logged-in');
     $('#accountlogin').removeClass('active');
     $('.tabcontent .accountnotlogin').addClass('active');
     $('.refreshbtn').addClass('hidden');

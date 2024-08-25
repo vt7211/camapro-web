@@ -22,17 +22,6 @@
       </li>
    </ul>
 </footer>
-<div class="alertCode">
-   <div class="img" style="background-image: url(/images/no-image.jpg)" alt=""></div>
-   <div class="bodyalert">
-      <div class="nameCSAlert">Cát Tường</div>
-      <div class="userAlert">
-         <span class="nameUsserAlert">A Tuấn</span>&nbsp;
-         <span class="phoneUsserAlert">0943***992</span>
-      </div>
-      <div class="wpTimeAlert">Đã lấy code cách đây <span class="timeAlert">10 giây</span></div>
-   </div>
-</div>
 <div class="clearfix"></div>
 </div>
 
@@ -45,19 +34,20 @@
 <script src="{{ URL('/assets/guest/js/jquery.countdown.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0r4RTw3ZP0A2cU6mmh3dWjJSeD8hx3fg&libraries=places"></script> -->
-<script type="text/javascript" src="{{ URL('v029/main.js?65') }}"></script>
+<script type="text/javascript" src="{{ URL('v029/main.js?58') }}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLXFrtV2RCrwb_O8ZQgWdEdAL5w_ERJ3w"></script>
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer></script>
 <script>
-   window.OneSignal = window.OneSignal || [];
-   OneSignal.push(function() {
-      OneSignal.init({
-         appId: "da2b04f0-56f4-4e4c-ab42-7544f4152071",
-      });
-   });
+  window.OneSignal = window.OneSignal || [];
+  OneSignal.push(function() {
+    OneSignal.init({
+      appId: "da2b04f0-56f4-4e4c-ab42-7544f4152071",
+    });
+  });
 </script>
 
 <script type="text/javascript">
+   
    function checkgup( name, url ) {
       if (!url) url = location.href;
       name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");

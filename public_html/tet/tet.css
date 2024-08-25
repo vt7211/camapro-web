@@ -1,0 +1,90 @@
+:root{
+    --mau1:#a01503;
+    --mau2:#871001;
+    --vang:#5db73c;
+    --den:#222;
+    --r1: 26;
+    --g1: 115;
+    --b1: 169;
+}
+body{
+    max-width: 100%;
+    background-image: url(/tet/anh-nen-tet-2024-v3.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+footer{
+    background-color: #fce8e5;
+}
+footer.tet li.active a{
+    color: red;
+}
+footer img{
+    display: block;
+    height: 30px;
+    margin: 0px auto 2px;
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(1); /* Google Chrome, Safari 6+ & Opera 15+ */
+    filter: grayscale(1); /* Microsoft Edge and Firefox 35+ */
+}
+footer li.active img{
+    -webkit-filter: grayscale(0);
+    filter: none;
+}
+.coso{
+    background-image: url("/images/bg-ma-km-tet.jpg");
+    background-size: 100% auto;
+}
+img.tet{
+    display:scroll;
+    position:fixed;
+    top:0px;
+    z-index:999
+}
+.tet-left{
+    left:0
+}
+.tet-right{
+    right:0
+}
+.title-home::after{
+    content: "";
+    width: 50px;
+    height: 50px;
+    background-size: 100% 100%;
+    background-image: url("/tet/tieu-de/banh-chung.png");
+    margin-left: 10px;
+}
+.wplistcoso .title-home::after{
+    content: "";
+    width: 50px;
+    height: 50px;
+    background-size: 100% 100%;
+    background-image: url("/tet/tieu-de/banh-tet.png");
+    margin-left: 10px;
+}
+.namesing::after{
+    content: "";
+    width: 50px;
+    height: 50px;
+    background-size: 100% 100%;
+    background-image: url("/tet/tieu-de/dua.png");
+    margin-left: 10px;
+}
+.wptitle-img img{
+    display: none;
+}
+.wptitle-img::after{
+    content: "";
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    background-size: 100% 100%;
+    background-image: url("/tet/tieu-de/non.png");
+}
+@media (max-width:800px){
+    img.tet{
+        display:none
+    }
+}
