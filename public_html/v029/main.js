@@ -22,6 +22,7 @@ var nav_def = {
     canBack: false,
     canSearch: false,
     canRefesh: false,
+    showlogo: false
 };
 var token = null;
 var settings = null;
@@ -52,7 +53,7 @@ var current_tabChild = {
         child: 'listnews',
     },
     spin: {
-        child: 'listspin',
+        child: 'listgame',
         getvongquay_page: 0,
 
     },
@@ -106,9 +107,9 @@ var vargoobal = {
         history: [{
             nav : {
                 canRefesh: true,
-                title: 'Vòng Quay May Mắn'
+                title: 'Games'
             },
-            div: '#getvongquay',
+            div: '#listgame',
         }],
         canRefesh: true,
     },
@@ -259,10 +260,6 @@ $(document).ready(function(){
             if(vargoobal[tab].canSearch) $('.searchbtn').removeClass('hidden'); else $('.searchbtn').addClass('hidden');
             if(title) $('h1').text(title);
 
-            // if(current_tab == 'spin') {
-            //     $('#iframespin').attr('src','https://spin.netsa.vn/view-spin/n68n4lv59c');
-            //     console.log('iframespin');
-            // }
             vargoobal[tab].loaded = true;
             // console.log('footer', loaded, current_tab, tab);
             current_tab = tab;
@@ -323,7 +320,7 @@ $(document).ready(function(){
         // console.log(top, hdiv);
         if (!loading.value && !current_tabChild[current_tab][namechild + '_maxpage'] && current_tabChild[current_tab][namechild + '_loadmore']) {
             if (top >= hdiv) {
-                let name = 'morehome';
+                let name = '';
                 let body = {}
                 if(!current_tabChild[current_tab][namechild + '_page']) current_tabChild[current_tab][namechild + '_page'] = 1;
                 if(current_tab == 'home'){
@@ -351,13 +348,16 @@ $(document).ready(function(){
                         os,
                     };
                 } else if (current_tab == 'spin'){
-                    name = 'getvongquay';
-                    body = {
-                        id: getIds(),
-                        page: current_tabChild[current_tab][namechild + '_page'] + 1,
-                        loadmore: true,
-                        os,
-                    };
+                    let child = current_tabChild[current_tab].child;
+                    if(child == 'searchcoso') {
+                        name = 'getvongquay';
+                        body = {
+                            id: getIds(),
+                            page: current_tabChild[current_tab][namechild + '_page'] + 1,
+                            loadmore: true,
+                            os,
+                        };
+                    }
                 } 
                 getData(name, body, {}).then((res) => {
                     // console.log('morehome', res.cosos);
@@ -432,6 +432,10 @@ $(document).ready(function(){
         showAlertCode();
     }, randomInteger(10000,20000));
 
+    $('.btnviewmore').on('click', function(){
+        // $(this).toggle('viewfull');
+        $('#wpquydinhquay').toggleClass('viewfull');
+    });
 });
 function isEmail(email) {
     var re =
@@ -485,6 +489,7 @@ function showAlertCode() {
         }
         let seconds = randomInteger(10,60);
         if(par.getAllCS == 0) seconds *= 3;
+        current_action = 'get-moi-lay-code';
         getData('get-moi-lay-code',par,{}).then((res) => {
             if(res.status == 'success') {
                 // if(nameaction == 'logout') logout();
@@ -505,7 +510,7 @@ function showAlertCode() {
                 }
                 // console.log('get-moi-lay-code',seconds, res);
             }else{
-                show_alert(res.msg ? res.msg : 'Lỗi kết nối');
+                // show_alert(res.msg ? res.msg : 'Lỗi kết nối');
             }
             return false;
         });
@@ -566,7 +571,7 @@ function setNav(navtemp = null){
     } else if(current_action == 'back') {
         navtemp = his.length > 1 && his[his.length - 1] ? his[his.length - 1].nav : {};
     }
-    // console.log('navtemp',navtemp);
+    // console.log('navtemp',current_action,navtemp);
     vargoobal[current_tab] = {
         ...vargoobal[current_tab],
         ...navtemp,
@@ -625,7 +630,7 @@ function checkShowLogoNav(checkshow = true){
     // let countLogo = parseInt($('.header1 .collefthead a').not(".hidden").length);
     // console.log('countLogo', countLogo);
     // if(countLogo > 1 || !checkshow){
-    if(current_tabChild[current_tab].child == 'dscoso'){
+    if(current_tabChild[current_tab].child == 'dscoso' || checkshow){
         $('.colmidhead').addClass('hasLogo');
     }else{
         $('.colmidhead').removeClass('hasLogo');
@@ -659,7 +664,7 @@ function getSelectorCurDiv(){
     // return `.tabcontent[data-tab="${current_tab}"] .tabchild.active`;
 }
 function getData(name, params = {}, headers = {}) {
-    if(!isString(name)) return false;
+    if(!isString(name) || !name) return false;
     if(!params.noloading) loading.value = true;
     // token = 111;
     if( token ) headers.Authorization = `Bearer ${token}`;
@@ -984,7 +989,7 @@ async function doAction(item = null, respon = null){
             let title = item.data('title');
             current_tabChild[current_tab].child = "#" + id;
             change_screen("#" + id);
-            setNav({canBack: true, canSearch: false, canRefesh: false,title});
+            setNav({canBack: true, canSearch: false, canRefesh: false, showlogo:false, title});
             changeStateUrl({title, slug});
             // console.log('single', title, vargoobal);
         }
@@ -998,7 +1003,7 @@ async function doAction(item = null, respon = null){
             $('#'+id).empty().html(codehtml);
             $('#'+id+' link').remove();
             change_screen("#" + id);
-            setNav({canBack: true, canSearch: false, canRefesh: false,title});
+            setNav({canBack: true, canSearch: false, canRefesh: false,showlogo:false, title});
             changeStateUrl({title, slug});
             // console.log('single_news', title, vargoobal);
         }
@@ -1024,12 +1029,16 @@ async function doAction(item = null, respon = null){
         par.page = 1;
         run = true;
     }
+    else if(nameaction == 'listgame') {
+        run = true;
+    }
     else if(nameaction == 'getvongquay') {
         if(!token) {
             show_alert('Bạn phải đăng nhập để thực hiện thao tác này');
             $('.tabfooter[data-tab="account"]').click();
         } else {
             par.page = 1;
+            console.log('doi luot quay');
             run = true;
         }
     }
@@ -1112,6 +1121,18 @@ async function doAction(item = null, respon = null){
             run = true;
         }
     }
+    else if(nameaction == 'checkPlay') {
+        let game_id = item.data('id');
+        // let type = item.data('type') ? item.data('type') : 'code';
+        if( !token ) {
+            show_alert('Bạn phải đăng nhập để thực hiện thao tác này');
+            $('.tabfooter[data-tab="account"]').click();
+        } else {
+            par.game_id = game_id;
+            par.nguon = os;
+            run = true;
+        }
+    }
     else if(nameaction == 'lichsupoint') {
         // if(!$('#listlspoint').hasClass('active')) {
         //     let title = item.data('title');
@@ -1167,32 +1188,14 @@ async function doAction(item = null, respon = null){
         // alert(os);
         // alert('save_device action: ' +par.device);
     }
-    else if(nameaction == 'back') {
-        let his = vargoobal[current_tab].history;
-        if(his && his[0] && his[1]){
-            his = removeLastArr(his);
-            let index = his.length ? his.length - 1 : 0 ;
-            vargoobal[current_tab].history = his;
-            let div = his[index].div;
-            let item = his[index].nav;
-            change_screen(div);
-            setNav(item);
-            changeStateUrl({title: item.title, slug: item.slug});
-            console.log('item',item);
-
-            // getSelectorCurDiv().empty();
-            $('.tabchild.modal.active').removeClass('active');
-        } else {
-            show_alert('Lỗi chức năng, bạn hãy tải lại ứng dụng nhé');
-        }
-        return false;
-    }
     else if(nameaction == 'refresh') {
         par.page = 1;
         let child = current_tabChild[current_tab].child;
         nameaction = child;
         if(user && nameaction == 'accountlogin') nameaction = 'user';
-        if(user && nameaction == 'listspin') nameaction = 'getvongquay';
+        if(user && nameaction == 'listgame') nameaction = 'listgame';
+        if(user && nameaction == 'listspin') nameaction = 'listspin';
+        if(user && nameaction == 'getvongquay') nameaction = 'getvongquay';
         // console.log('refresh', nameaction, child, par);
 
         if(!nameaction){
@@ -1234,6 +1237,26 @@ async function doAction(item = null, respon = null){
         let type = item.data('type') ? item.data('type') : 'code';
         $('.tabfooter[data-tab="account"]').click();
         $('.action[data-nameaction="listcode"]').click();
+    }
+    else if(nameaction == 'back') {
+        let his = vargoobal[current_tab].history;
+        if(his && his[0] && his[1]){
+            his = removeLastArr(his);
+            let index = his.length ? his.length - 1 : 0 ;
+            vargoobal[current_tab].history = his;
+            let div = his[index].div;
+            let item = his[index].nav;
+            change_screen(div);
+            setNav(item);
+            changeStateUrl({title: item.title, slug: item.slug});
+            console.log('back item',index, div, item);
+
+            // getSelectorCurDiv().empty();
+            $('.tabchild.modal.active').removeClass('active');
+        } else {
+            show_alert('Lỗi chức năng, bạn hãy tải lại ứng dụng nhé');
+        }
+        return false;
     }
     else if(nameaction == 'modal') {
         $('#' + id).addClass('active');
@@ -1288,6 +1311,13 @@ function loadscript(name = 'home'){
         });
     } else if(name == 'home') {
         if(last_res.settings) settings = last_res.settings;
+        
+        let phone = settings.sdt.replace(/\./g, "");
+        $('#linksp_fb').attr('href',settings.fanpage);
+        $('#linksp_zalo').attr('href',settings.sdtzalo);
+        $('#linksp_hotline, .linkhotline').attr('href','tel:'+phone);
+        $('.linkhotline').text(settings.sdt);
+        
         if(last_res.diachis) varibles.diachis = last_res.diachis;
         if(last_res.giovangs) varibles.giovangs = last_res.giovangs;
         if(last_res.data.user) {
@@ -1617,7 +1647,8 @@ function loadscript(name = 'home'){
             user = last_res.user;
             localStorage.setItem('user', JSON.stringify(user));
             loadinfoaccount(user);
-            $('.backbtn').click();
+            show_alert('Đã lưu thông tin thành công');
+            // $('.backbtn').click();
         } else show_alert(last_res.msg);
     } else if(name == 'detailcoso') {
         if(last_res.status == 'success'){
@@ -1631,7 +1662,7 @@ function loadscript(name = 'home'){
                 slug: last_res.data.alias
             }
             changeStateUrl(data);
-            setNav({canBack: true, canSearch: false, canRefesh: false,title: last_res.data.name, slug: last_res.data.alias});
+            setNav({canBack: true, canSearch: false, canRefesh: false,showlogo:false, title: last_res.data.name, slug: last_res.data.alias});
             
             html += '<div class="slidersing owl-theme owl-carousel">';
             last_res.images.map((item2, index) => {
@@ -1730,7 +1761,7 @@ function loadscript(name = 'home'){
                 slug: last_res.data.alias
             }
             changeStateUrl(data);
-            setNav({canBack: true, canSearch: false, canRefesh: false,title: last_res.data.name, slug: last_res.data.alias});
+            setNav({canBack: true, canSearch: false, canRefesh: false,showlogo:false, title: last_res.data.name, slug: last_res.data.alias});
             
             html += '<div class="slidersing owl-theme owl-carousel">';
             last_res.images.map((item2, index) => {
@@ -1811,7 +1842,7 @@ function loadscript(name = 'home'){
                 slug: last_res.data.alias
             }
             // changeStateUrl(data);
-            setNav({canBack: true, canSearch: false, canRefesh: false,title: last_res.data.name, slug: last_res.data.sku});
+            setNav({canBack: true, canSearch: false, canRefesh: false,showlogo:false, title: last_res.data.name, slug: last_res.data.sku});
             
             html += '<div class="slidersing owl-theme owl-carousel">';
             html += `<div class="imgsing" style="background-image: url(${item.link_image})" ></div>`;
@@ -2055,8 +2086,58 @@ function loadscript(name = 'home'){
         } else {
             show_alert(last_res.msg);
         }
+    } else if(name == 'listgame') {
+        if(last_res.status == 'success') {
+            
+            setNav({canBack: false, canSearch: false, canRefesh: true, showlogo: false, title: "Game"});
+            
+            // console.log('listgame', last_res);
+            // current_tabChild[current_tab][namechild + '_loadmore'] = false;
+            // current_tabChild[current_tab][namechild + '_page'] += 1;
+            // let page = current_tabChild[current_tab][namechild + '_page'];
+            // if(last_res.list.current_page >= last_res.list.last_page) {
+            //     current_tabChild[current_tab][namechild + '_maxpage'] = true;
+            // }
+            let html = `<div class="col-md-12 pt-15px"><a href="#" class="action itemgame" data-nameaction="getvongquay" data-id="getvongquay" data-title="Vòng Quay May Mắn">
+                <img src="/images/banner-vong-quay.jpg" alt="vòng quay">
+            </a></div>`;
+            if(last_res && isObject(last_res) && last_res.list && last_res.list.length > 0){
+                // console.log('listgame 2', last_res);
+                
+                last_res.list.map((item, index) => {
+                    html += getHtml(item,'game');
+                    saveId(item.id);
+                });
+            } else{
+                $('#listgame').empty();
+            }
+            // console.log('html', html);
+
+            $('#listgame').append(html);
+            // console.log(namechild);
+        } else {
+            show_alert(last_res.msg);
+        }
+    } else if(name == 'checkPlay') {
+        let link = last_res.link_game;
+        let txt = last_res.game.thele;
+        let options = {};
+        options.buttons = ['Không Chơi','Chơi Ngay'];
+        // console.log('checkPlay', link);
+        show_alert(txt, options, () => {
+            window.open(link, '_blank').focus();
+        });
     } else if(name == 'getvongquay') {
         if(last_res.status == 'success') {
+            
+            change_screen('#getvongquay');
+            // let item = last_res.data;
+            // let data = {
+            //     title: last_res.data.name,
+            //     slug: last_res.data.alias
+            // }
+            // changeStateUrl(data);
+            setNav({canBack: true, canSearch: false, canRefesh: true, showlogo: false, title: "Vòng Quay May Mắn"});
             
             let quydinhquay = settings.quydinhquay;
             let thoihanquay = parseInt(convertnumber(settings.thoihanquay));
@@ -2071,10 +2152,11 @@ function loadscript(name = 'home'){
                 str = str.replace('[PDI]', diemthuong);
                 return '<p>' + str + '</p>';
             });
+            let btnMore = '';
             if(current_tabChild[current_tab][namechild + '_page'] == 0) $('#quydinhquay, #listquay').empty();
-            $('#quydinhquay').append(restr);
+            $('#quydinhquay').append(restr).append(btnMore);
             
-            console.log('getvongquay', last_res);
+            // console.log('getvongquay', last_res);
             current_tabChild[current_tab][namechild + '_loadmore'] = true;
             current_tabChild[current_tab][namechild + '_page'] += 1;
             let page = current_tabChild[current_tab][namechild + '_page'];
@@ -2090,8 +2172,8 @@ function loadscript(name = 'home'){
                 $('#listquay').empty();
                 html += '<p class="col-md-12">Chưa có vòng quay nào</p>';
             }
-            $('#listquay').append(html);
-            console.log(namechild);
+            $('#listquay').empty().append(html);
+            // console.log(namechild);
         } else {
             show_alert(last_res.msg);
         }
@@ -2267,7 +2349,6 @@ function show_alert(txt, arrj = {}, willdeleteFunc = (willDelete) => {}){
     if(arrj.buttons) attr.buttons = arrj.buttons; else attr.buttons = ["Đóng", null];
     
     // console.log('show_alert',attr, arrj);
-    
     swal(attr).then((willDelete) => {
         if (willDelete) {
             willdeleteFunc();
@@ -2411,7 +2492,7 @@ function getHtml(item = null, type = 'coso'){
             </div></div>`;
         } else if (item.status === 0) {
             html += `<div class="vongquay">
-            <a href="#" class="action" data-note="Quay trên webview" data-bill="${item.sku}" data-title="Vòng Quay May Mắn" data-nameaction="single_spin" data-id="singlespin" >
+            <a href="#" class="action block" data-note="Quay trên webview" data-bill="${item.sku}" data-title="Vòng Quay May Mắn" data-nameaction="single_spin" data-id="singlespin" >
                 <b class="name">${item.sku}</b>
                 <span class="trangthai">Chưa quay</span>
                 <p>Thời hạn: ${item.thoihanquay}</p>
@@ -2532,6 +2613,13 @@ function getHtml(item = null, type = 'coso'){
             <div class="clearfix"></div>
         </div>`;
     }
+    if(type == 'game') {
+        // let SKU_POINT = settings.SKU_POINT;
+        html = `<div class="col-md-12 pt-15px"><a href="#" target="_blank" class="action itemgame" data-nameaction="checkPlay" data-id="${item.id}">
+            <img src="${item.img}" alt="${item.name}">
+            <span class="btn btn-xs btn-circle btn-danger">Dành Cho Vip Member</span>
+        </a></div>`;
+    }
     
     return html;
 }
@@ -2577,10 +2665,6 @@ function loadinfoaccount(user) {
     $(`${idcs} [name="address"]`).val(user.address);
     $(`${idcs} [name="ngaysinh"]`).val(user.ngaysinh);
     $(`${idcs} [name="email"]`).val(user.email);
-
-    $('#linksp_fb').attr('href',settings.fanpage);
-    $('#linksp_zalo').attr('href',settings.sdtzalo);
-    $('#linksp_hotline').attr('href','tel:'+settings.sdt);
 
     if(settings.huongdannaptien) $('#huongdannaptien').html(settings.huongdannaptien);
     if(settings.quyenloitv) $('#quyenloitv').html(settings.quyenloitv);

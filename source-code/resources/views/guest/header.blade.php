@@ -45,7 +45,7 @@
    <link href="{{ URL('assets/guest/css/owl.theme.default.css') }}" rel="stylesheet" type="text/css" />
    <link href="{{ URL('assets/guest/css/owl.carousel.min.css') }}" rel="stylesheet" type="text/css" />
    <link href="{{ URL('assets/guest/css/bootstrap-rating.css') }}" rel="stylesheet" type="text/css" />
-   <link href="{{ URL('v029/guest.css?69') }}" rel="stylesheet" type="text/css" />
+   <link href="{{ URL('v029/guest.css?72') }}" rel="stylesheet" type="text/css" />
    <!-- BEGIN CSS for this page -->
    @yield("css")
    <!-- END CSS for this page -->

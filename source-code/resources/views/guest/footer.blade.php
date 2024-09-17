@@ -12,9 +12,9 @@
          <i class="fa fa-newspaper-o"></i>
          <span>Tin Tức</span></a>
       </li>
-      <li><a href="#" data-canRefesh="1" data-title="Vòng Quay May Mắn" class="tabfooter action requireLogin" data-requireLogin="1" data-nameaction="getvongquay" data-tab="spin">
-         <i class="fa fa-dot-circle-o"></i>
-         <span>Vòng Quay</span></a>
+      <li><a href="#" data-canRefesh="0" data-title="Games" class="tabfooter action requireLogin" data-requireLogin="1" data-nameaction="listgame" data-tab="spin">
+         <i class="fa fa-gamepad"></i>
+         <span>Game</span></a>
       </li>
       <li><a href="#" data-title="Tài Khoản" data-canRefesh="1" data-header="2" class="tabfooter" data-tab="account">
          <i class="fa fa-user"></i>
@@ -25,10 +25,10 @@
 <div class="alertCode">
    <div class="img" style="background-image: url(/images/no-image.jpg)" alt=""></div>
    <div class="bodyalert">
-      <div class="nameCSAlert">Cát Tường</div>
+      <div class="nameCSAlert">***</div>
       <div class="userAlert">
-         <span class="nameUsserAlert">A Tuấn</span>&nbsp;
-         <span class="phoneUsserAlert">0943***992</span>
+         <span class="nameUsserAlert">***</span>&nbsp;
+         <span class="phoneUsserAlert">09*****992</span>
       </div>
       <div class="wpTimeAlert">Đã lấy code cách đây <span class="timeAlert">10 giây</span></div>
    </div>
@@ -45,7 +45,7 @@
 <script src="{{ URL('/assets/guest/js/jquery.countdown.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0r4RTw3ZP0A2cU6mmh3dWjJSeD8hx3fg&libraries=places"></script> -->
-<script type="text/javascript" src="{{ URL('v029/main.js?65') }}"></script>
+<script type="text/javascript" src="{{ URL('v029/main.js?67') }}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLXFrtV2RCrwb_O8ZQgWdEdAL5w_ERJ3w"></script>
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer></script>
 <script>

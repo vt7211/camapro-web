@@ -82,9 +82,15 @@
     <div class="tabchild" id="singlenews"></div>
 </div>
 <div class="tabcontent" data-tab="spin">
-    <div class="main tabchild active bgxam" id="getvongquay">
+    <div class="main tabchild active bgxam" id="listgame"></div>
+    <div class="tabchild bgxam" id="getvongquay">
+        <div class="col-md-12 relative">
+            <div id="wpquydinhquay">
+                <div id="quydinhquay" class="content mb-10px"></div>
+                <a href="#" class="btnviewmore btn-xs btn btn-primary btn-circle"></a>
+            </div>
+        </div>
         <div class="col-md-12">
-            <div id="quydinhquay" class="content mb-10px"></div>
             <a href="#" class="btn btn-block btn-primary action mb-15px" data-nameaction="doiluotquay">Đổi Lượt Quay</a>
         </div>
         <div id="listquay"></div>
@@ -190,13 +196,13 @@
                         <h3 class="titlemodal">Hỗ Trợ Kỹ Thuật</h3>
                         <div class="row">
                             <div class="col-md-4 col-sm-4 col-xs-4 col-xxs-5">
-                                <a href="" id="linksp_fb"><img src="/images/logo-facebook.png" alt="facebook"><p>Facebook</p></a>
+                                <a href="" target="_blank" id="linksp_fb"><img src="/images/logo-facebook.png" alt="facebook"><p>Facebook</p></a>
                             </div>
                             <div class="col-md-4 col-sm-4 col-xs-4 col-xxs-5">
-                                <a href="" id="linksp_zalo"><img src="/images/logo-zalo.png" alt="facebook"><p>Zalo</p></a>
+                                <a href="" target="_blank" id="linksp_zalo"><img src="/images/logo-zalo.png" alt="facebook"><p>Zalo</p></a>
                             </div>
                             <div class="col-md-4 col-sm-4 col-xs-4 col-xxs-5">
-                                <a href="" id="linksp_hotline"><img src="/images/icon-hotline.png" alt="facebook"><p>Hotline</p></a>
+                                <a href="" target="_blank" id="linksp_hotline"><img src="/images/icon-hotline.png" alt="facebook"><p>Hotline</p></a>
                             </div>
                         </div>
                     </div>
@@ -313,7 +319,7 @@
                             </div>
                         </div>
                         <div class="alert" style="color: #888;">
-                            <p>Hỗ trợ kỹ thuật: <a href="tel:0888356579" style="color: red;">0888356579</a></p>
+                            <p>Hỗ trợ kỹ thuật: <a href="" class="linkhotline" style="color: red;">xxx</a></p>
                         </div>
                     </div>
                     <div class="ndmain gr" id="grdktv">
