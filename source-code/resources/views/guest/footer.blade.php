@@ -42,10 +42,11 @@
 <script type="text/javascript" src="{{ URL('/assets/guest/js/sweetalert.min.js') }}"></script>
 <script src="{{ URL('/assets/guest/js/bootstrap-rating.min.js') }}"></script>
 <script src="{{ URL('/assets/js/jquery-qrcode-0.18.0.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ URL('/assets/guest/js/jquery.countdown.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0r4RTw3ZP0A2cU6mmh3dWjJSeD8hx3fg&libraries=places"></script> -->
-<script type="text/javascript" src="{{ URL('v029/main.js?67') }}"></script>
+<script type="text/javascript" src="{{ URL('v029/main.js?70') }}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLXFrtV2RCrwb_O8ZQgWdEdAL5w_ERJ3w"></script>
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer></script>
 <script>

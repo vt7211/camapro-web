@@ -349,7 +349,7 @@ $(document).ready(function(){
                     };
                 } else if (current_tab == 'spin'){
                     let child = current_tabChild[current_tab].child;
-                    if(child == 'searchcoso') {
+                    if(child == 'getvongquay') {
                         name = 'getvongquay';
                         body = {
                             id: getIds(),
@@ -358,8 +358,8 @@ $(document).ready(function(){
                             os,
                         };
                     }
-                } 
-                getData(name, body, {}).then((res) => {
+                }
+                if(name) getData(name, body, {}).then((res) => {
                     // console.log('morehome', res.cosos);
                     if(res.status == 'success') {
                         // loadscript(name);
@@ -435,6 +435,14 @@ $(document).ready(function(){
     $('.btnviewmore').on('click', function(){
         // $(this).toggle('viewfull');
         $('#wpquydinhquay').toggleClass('viewfull');
+    });
+
+    // popup
+	$('.btnclosePopup, .linkBNPop').on('click', function(){
+        var expDate = new Date();
+        expDate.setTime(expDate.getTime() + (120 * 60 * 1000)); // add 120 minutes
+        $.cookie('checkpopup', 1, { path: '/', expires: expDate });
+        $('#wppopup').removeClass('active');
     });
 });
 function isEmail(email) {
@@ -856,7 +864,7 @@ async function doAction(item = null, respon = null){
         let text = item.data('code');
         if(text) {
             $('#' + id).find('.sku').text(text);
-            $('#' + id).find('.noidung').empty().qrcode({text, size: 330});
+            $('#' + id).find('.noidung').empty().qrcode({text, size: 600});
             $('#' + id).addClass('active');
         } else {
             show_alert("Không nhận được thông tin mã để hiển thị!", {
@@ -1335,16 +1343,72 @@ function loadscript(name = 'home'){
             let motinslider = settings.motinslider;
             html += '<div class="slider owl-theme owl-carousel">';
             settings.slider.map((item, index) => {
-                let link = '';
+                let link = id = '';
                 // console.log(index, motinslider[index]);
-                if(motinslider[index]) link += `<a data-nameaction="single" data-iditem="${motinslider[index]}" data-id="singlenews_home" data-title="Đang tải tin..." class="action" href="#">`;
+                if(motinslider[index]) {
+                    if(motinslider[index] && motinslider[index].includes('n')) {
+                        link += `<a data-nameaction="single" data-iditem="${motinslider[index].replace(/^\D+/g, '')}" data-id="singlenews_home" data-title="Đang tải tin..." class="action" href="#">`;
+                    } else if(motinslider[index] && motinslider[index].includes('c')) {
+                        // id = motinslider[index].replace(/^\D+/g, '');
+                        link += `<a data-nameaction="detailcoso" data-iditem="detailcoso" data-id="${motinslider[index].replace(/^\D+/g, '')}" data-title="Đang tải tin..." class="action" href="#">`;
+                    }
+                }
                 let img = `${link}<img src="${item}" >`;
                 if(motinslider[index]) img += `</a>`;
                 html += img;
             });
             html += '</div><div class="" style="background: #f5f5f5; height: 10px;"></div>';
         }
-        
+        if(settings.activetbhome){
+            let thongbaohome = settings.thongbaohome;
+            html += `<div id="thongbaohome" class="marquee"><div class="chu-chay" id="">${thongbaohome}</div></div>`;
+            // html += `<div class="col-md-12"><div id="thongbaohome">${thongbaohome}</div></div>`;
+        }
+        if(settings.activepopup){
+            let varPop = [];
+            let motinpopup = settings.motinpopup;
+            console.log('popup', settings.popup, motinpopup);
+            settings.popup.map((item, index) => {
+                let type = null;
+                let id = 0;
+                if(motinpopup[index]) {
+                    if(motinpopup[index] && motinpopup[index].includes('n')) type = 'single';
+                    else if(motinpopup[index] && motinpopup[index].includes('c')) type = 'detailcoso';
+                }
+                if(item) {
+                    varPop[varPop.length] = {
+                        img: item,
+                        type,
+                        id: motinpopup[index] ? motinpopup[index].replace(/^\D+/g, '') : 0
+                    }
+                }
+            });
+
+            console.log('varPop', varPop);
+            let checkpopup = $.cookie('checkpopup');
+            let numVarPop = $.cookie('numVarPop') ? parseInt($.cookie('numVarPop')) : 0;
+            if(!varPop[numVarPop]) {
+                var expDate = new Date();
+                expDate.setTime(expDate.getTime() + (120 * 60 * 1000)); // add 120 minutes
+                $.cookie('checkpopup', 1, { path: '/', expires: expDate });
+                $('#wppopup').removeClass('active');
+            }
+            if(!checkpopup && varPop[numVarPop]){
+                let lengthPop = varPop.length - 1;
+                if( lengthPop < 0 ) lengthPop = 0;
+                numVarPop += 1;
+                if(numVarPop > lengthPop) numVarPop = 0;
+                $('.imgBNPop').attr('src',varPop[numVarPop].img);
+                if(varPop[numVarPop].type) {
+                    if(varPop[numVarPop].type == 'detailcoso') $('.linkBNPop').addClass('action').attr('data-nameaction',varPop[numVarPop].type).attr('data-id',varPop[numVarPop].id);
+                    else if(varPop[numVarPop].type == 'single') $('.linkBNPop').addClass('action').attr('data-id','singlenews_home').attr('data-nameaction',varPop[numVarPop].type).attr('data-iditem',varPop[numVarPop].id);
+                }
+                $('#wppopup').addClass('active');
+                // console.log('numVarPop', numVarPop);
+                $.cookie('numVarPop', numVarPop, { path: '/' });
+
+            }
+        }
         if(last_res && isObject(last_res) && last_res.giovangs.length){
             html += '<div class="col-md-12"><a class="btn btn-primary btn-block action mb-10px" data-nameaction="getGiovang">Giờ Vàng Hôm Nay</a></div>';
         }
@@ -1496,7 +1560,7 @@ function loadscript(name = 'home'){
                 nameaction: 'slug',
                 slug,
             });
-        }detaildeal
+        }
         // getData('getsetting',{json: 1, saveRes: 1});
     } else if(name == 'morehome') {
         current_tabChild[current_tab][namechild + '_page'] += 1;
@@ -1634,7 +1698,7 @@ function loadscript(name = 'home'){
             if(last_res.favourite.last_page <= last_res.favourite.current_page) {
                 current_tabChild[current_tab][namechild + '_maxpage'] = true;
             }
-            getSelectorCurDiv().append(html);
+            getSelectorCurDiv().empty().append(html);
             current_tabChild[current_tab].child = name;
 
             $("input.rating").rating({

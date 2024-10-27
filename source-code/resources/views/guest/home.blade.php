@@ -11,6 +11,16 @@
 
 </style>
 @section("content")
+<div id="wppopup" class="">
+    <div id="contentpopup">
+        <div class="wpcontentpopup">
+            <a href="#" class="btnclosePopup">Đóng</a>
+            <a class="linkBNPop" href="#">
+                <img class="imgBNPop" src="" alt="combo massage">
+            </a>
+        </div>
+    </div>
+</div>
 <div class="tabcontent active scrollpane" data-tab="home">
     <div class="main tabchild active listitems" id="dscoso"></div>
     <div class="tabchild listitems pt-10px" id="searchcoso"><div class="wplistcoso"></div><div class="clearfix"></div></div>
